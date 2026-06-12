@@ -27,12 +27,12 @@ export function Badge({ className, variant, ...props }: React.HTMLAttributes<HTM
 
 export function categoryBadgeVariant(category: string): BadgeVariant {
   const map: Record<string, BadgeVariant> = {
-    "Fútbol":       "blue",
-    "Básquet":      "blue",
-    "Hockey":       "blue",
-    "Patín":        "blue",
-    "Gimnasia":     "blue",
-    "Eventos":      "blue",
+    "Fútbol":       "red",
+    "Básquet":      "red",
+    "Hockey":       "red",
+    "Patín":        "red",
+    "Gimnasia":     "red",
+    "Eventos":      "red",
     "Institucional":"default",
     "Cuotas":       "amber",
     "Comunicados":  "default",

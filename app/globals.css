@@ -3,8 +3,8 @@
 @theme inline {
   --color-vc-red: #C8102E;
   --color-vc-red-hover: #a50d25;
-  --color-vc-blue: #003DA5;
-  --color-vc-blue-hover: #002d7a;
+  --color-vc-blue: #C8102E;
+  --color-vc-blue-hover: #8B0000;
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);

@@ -10,7 +10,7 @@ import { formatDate } from "@/lib/utils";
 export const metadata: Metadata = { title: "Eventos" };
 
 const categoryGradient: Record<string, string> = {
-  "Fútbol":        "from-[#003DA5] to-[#0052d4]",
+  "Fútbol":        "from-[#C8102E] to-[#e8173a]",
   "Básquet":       "from-[#1d4ed8] to-[#3b82f6]",
   "Hockey":        "from-[#0d9488] to-[#14b8a6]",
   "Institucional": "from-[#4A5568] to-[#718096]",
@@ -30,7 +30,7 @@ export default function EventosPage() {
           const cuposDisp = evento.cupos ? evento.cupos - (evento.inscriptos ?? 0) : null;
           const pctFull   = evento.cupos ? ((evento.inscriptos ?? 0) / evento.cupos) * 100 : 0;
           const casiLleno = pctFull > 75;
-          const grad      = categoryGradient[evento.category] ?? "from-[#003DA5] to-[#0052d4]";
+          const grad      = categoryGradient[evento.category] ?? "from-[#C8102E] to-[#e8173a]";
 
           return (
             <Link key={evento.id} href={`/eventos/${evento.id}`}>
@@ -82,7 +82,7 @@ export default function EventosPage() {
                           </div>
                           <div className="h-1.5 bg-[#F0F3FA] rounded-full overflow-hidden">
                             <div
-                              className={`h-full rounded-full transition-all ${casiLleno ? "bg-[#C8102E]" : "bg-[#003DA5]"}`}
+                              className={`h-full rounded-full transition-all bg-[#C8102E]`}
                               style={{ width: `${pctFull}%` }}
                             />
                           </div>

@@ -9,7 +9,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-dvh flex flex-col bg-[#F4F6FA]">
       {/* Top section — brand */}
-      <div className="bg-gradient-to-b from-[#003DA5] to-[#002d7a] pt-safe pb-12 px-5 flex flex-col">
+      <div className="bg-gradient-to-b from-[#C8102E] to-[#8B0000] pt-safe pb-12 px-5 flex flex-col">
         <Link href="/" className="flex items-center gap-1.5 text-sm text-white/60 mt-4 mb-8 hover:text-white transition-colors self-start">
           <ArrowLeft className="w-4 h-4" /> Volver
         </Link>
@@ -51,15 +51,15 @@ export default function LoginPage() {
             <input
               type="email"
               placeholder="correo@ejemplo.com"
-              className="w-full h-11 px-4 rounded-xl border border-[#E8ECF4] bg-[#F4F6FA] text-sm text-[#0D1117] placeholder:text-[#8892A4] focus:outline-none focus:ring-2 focus:ring-[#003DA5] focus:border-transparent transition-all"
+              className="w-full h-11 px-4 rounded-xl border border-[#E8ECF4] bg-[#F4F6FA] text-sm text-[#0D1117] placeholder:text-[#8892A4] focus:outline-none focus:ring-2 focus:ring-[#C8102E] focus:border-transparent transition-all"
             />
             <input
               type="password"
               placeholder="Contraseña"
-              className="w-full h-11 px-4 rounded-xl border border-[#E8ECF4] bg-[#F4F6FA] text-sm text-[#0D1117] placeholder:text-[#8892A4] focus:outline-none focus:ring-2 focus:ring-[#003DA5] focus:border-transparent transition-all"
+              className="w-full h-11 px-4 rounded-xl border border-[#E8ECF4] bg-[#F4F6FA] text-sm text-[#0D1117] placeholder:text-[#8892A4] focus:outline-none focus:ring-2 focus:ring-[#C8102E] focus:border-transparent transition-all"
             />
             <Link href="/inicio">
-              <button className="w-full h-11 bg-[#003DA5] text-white rounded-xl text-sm font-bold hover:bg-[#002d7a] transition-colors flex items-center justify-center gap-2 mt-1 shadow-sm">
+              <button className="w-full h-11 bg-[#C8102E] text-white rounded-xl text-sm font-bold hover:bg-[#8B0000] transition-colors flex items-center justify-center gap-2 mt-1 shadow-sm">
                 Ingresar <ArrowRight className="w-4 h-4" />
               </button>
             </Link>
@@ -67,7 +67,7 @@ export default function LoginPage() {
 
           <p className="text-center text-xs text-[#8892A4] mt-4">
             ¿No tenés acceso?{" "}
-            <a href="#" className="text-[#003DA5] font-semibold">Contactá al club</a>
+            <a href="#" className="text-[#C8102E] font-semibold">Contactá al club</a>
           </p>
         </div>
 
