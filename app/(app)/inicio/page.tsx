@@ -1,215 +1,198 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Newspaper, Calendar, Trophy, CreditCard, Clock, Users,
-  ChevronRight, TrendingUp, AlertCircle, CheckCircle2, Megaphone
+  ChevronRight, AlertCircle, CheckCircle2, Megaphone,
+  MapPin, Shield, Dumbbell
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge, categoryBadgeVariant } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { mockUser, mockNoticias, mockEventos, mockCuotas, mockPartidos, mockAvisos, mockProfesores, type AvisoTipo } from "@/lib/mock-data";
-import { formatDate, formatShortDate, formatCurrency, getInitials } from "@/lib/utils";
+import {
+  mockUser, mockNoticias, mockEventos, mockCuotas,
+  mockPartidos, mockAvisos, mockProfesores, type AvisoTipo
+} from "@/lib/mock-data";
+import { formatDate, formatShortDate, formatCurrency } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Inicio" };
 
 const quickLinks = [
-  { href: "/noticias",   label: "Noticias",  icon: Newspaper,  color: "bg-[#003DA5]/10 text-[#003DA5]" },
-  { href: "/avisos",     label: "Avisos",    icon: Megaphone,  color: "bg-[#C8102E]/10 text-[#C8102E]" },
-  { href: "/horarios",   label: "Horarios",  icon: Clock,      color: "bg-[#003DA5]/10 text-[#003DA5]" },
-  { href: "/cuotas",     label: "Cuotas",    icon: CreditCard, color: "bg-amber-50 text-amber-700" },
-  { href: "/calendario", label: "Agenda",    icon: Calendar,   color: "bg-[#003DA5]/10 text-[#003DA5]" },
-  { href: "/perfil",     label: "Mi Perfil", icon: Users,      color: "bg-[#003DA5]/10 text-[#003DA5]" },
+  { href: "/noticias",     label: "Noticias",   icon: Newspaper,  bg: "bg-[#003DA5]/8",  color: "text-[#003DA5]"  },
+  { href: "/avisos",       label: "Avisos",     icon: Megaphone,  bg: "bg-[#C8102E]/8",  color: "text-[#C8102E]"  },
+  { href: "/horarios",     label: "Horarios",   icon: Clock,      bg: "bg-[#003DA5]/8",  color: "text-[#003DA5]"  },
+  { href: "/cuotas",       label: "Cuotas",     icon: CreditCard, bg: "bg-amber-50",     color: "text-amber-600"  },
+  { href: "/calendario",   label: "Agenda",     icon: Calendar,   bg: "bg-[#003DA5]/8",  color: "text-[#003DA5]"  },
+  { href: "/perfil",       label: "Mi Carnet",  icon: Shield,     bg: "bg-[#003DA5]/8",  color: "text-[#003DA5]"  },
 ];
 
-const tipoCfg: Record<AvisoTipo, { label: string; color: string }> = {
-  general:      { label: "General",      color: "bg-[#f1f3f7] text-[#6b7280]" },
-  suspensión:   { label: "Suspendido",   color: "bg-[#C8102E]/10 text-[#C8102E]" },
-  recordatorio: { label: "Recordatorio", color: "bg-amber-50 text-amber-700" },
-  resultado:    { label: "Resultado",    color: "bg-emerald-50 text-emerald-700" },
-  convocatoria: { label: "Convocatoria", color: "bg-[#003DA5]/10 text-[#003DA5]" },
+const tipoCfg: Record<AvisoTipo, { label: string; dot: string }> = {
+  general:      { label: "General",      dot: "bg-[#8892A4]"  },
+  suspensión:   { label: "Suspendido",   dot: "bg-[#C8102E]"  },
+  recordatorio: { label: "Recordatorio", dot: "bg-amber-500"  },
+  resultado:    { label: "Resultado",    dot: "bg-emerald-500" },
+  convocatoria: { label: "Convocatoria", dot: "bg-[#003DA5]"  },
 };
 
-function CuotaStatusCard() {
-  const status = mockCuotas.status;
+const categoryGradient: Record<string, string> = {
+  "Fútbol":        "from-[#003DA5] to-[#0052d4]",
+  "Básquet":       "from-[#1d4ed8] to-[#3b82f6]",
+  "Hockey":        "from-[#0d9488] to-[#14b8a6]",
+  "Institucional": "from-[#4A5568] to-[#718096]",
+  "Cuotas":        "from-[#d97706] to-[#f59e0b]",
+};
+
+export default function InicioPage() {
+  const proximoPartido  = mockPartidos[0];
+  const noticiaDestacada = mockNoticias.find(n => n.pinned) ?? mockNoticias[0];
   const pendiente = mockCuotas.historial.find(c => c.estado === "pendiente");
-
-  const colors = {
-    "al-dia":    { bg: "bg-green-50 border-green-200",  icon: CheckCircle2, iconColor: "text-green-600", label: "Estás al día con la cuota ✓" },
-    "por-vencer":{ bg: "bg-yellow-50 border-yellow-200",icon: AlertCircle,  iconColor: "text-yellow-600",label: "La cuota está por vencer" },
-    "deuda":     { bg: "bg-red-50 border-red-200",      icon: AlertCircle,  iconColor: "text-red-600",   label: "Tenés una cuota sin pagar" },
-  };
-
-  const cfg = colors[status];
-  const Icon = cfg.icon;
+  const cuotaAlDia = mockCuotas.status === "al-dia" && !pendiente;
 
   return (
-    <Link href="/cuotas">
-      <Card className={`${cfg.bg} cursor-pointer hover:opacity-90 transition-opacity`}>
-        <CardContent className="flex items-center gap-3 py-4">
-          <Icon className={`w-5 h-5 shrink-0 ${cfg.iconColor}`} />
+    <div className="space-y-5 animate-fade-in">
+
+      {/* Greeting */}
+      <div className="pt-1">
+        <p className="text-sm text-[#8892A4] font-medium">Hola de nuevo,</p>
+        <h1 className="text-2xl font-black tracking-tight text-[#0D1117]">
+          {mockUser.name.split(" ")[0]} 👋
+        </h1>
+      </div>
+
+      {/* Match hero card */}
+      <Card className="overflow-hidden border-0 shadow-[0_4px_20px_0_rgb(0_61_165/0.15)]">
+        <div className="bg-gradient-to-br from-[#003DA5] via-[#0047C0] to-[#002d7a] p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Próximo partido</span>
+            <span className="text-[10px] bg-white/15 text-white/80 px-2 py-0.5 rounded-full font-medium">
+              {proximoPartido.deporte} · {proximoPartido.categoria}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between gap-3">
+            {/* Local */}
+            <div className="flex flex-col items-center gap-2 flex-1">
+              <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center">
+                <Image src="/escudo.png" alt="VC" width={40} height={39} />
+              </div>
+              <span className="text-xs font-bold text-white text-center leading-tight">Villa Congreso</span>
+            </div>
+
+            {/* VS */}
+            <div className="flex flex-col items-center gap-1 px-3">
+              <div className="bg-white/10 rounded-xl px-4 py-2">
+                <span className="text-xl font-black text-white tracking-tight">VS</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-white/60">
+                <Calendar className="w-3 h-3" />
+                <span className="text-[10px] font-medium">
+                  {formatShortDate(proximoPartido.fecha)} · {proximoPartido.hora}
+                </span>
+              </div>
+            </div>
+
+            {/* Visitante */}
+            <div className="flex flex-col items-center gap-2 flex-1">
+              <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center">
+                <span className="text-white font-black text-lg">
+                  {proximoPartido.visitante.split(" ").map(w => w[0]).slice(0,2).join("")}
+                </span>
+              </div>
+              <span className="text-xs font-bold text-white text-center leading-tight">{proximoPartido.visitante}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 mt-4 text-white/60">
+            <MapPin className="w-3.5 h-3.5 shrink-0" />
+            <span className="text-xs">{proximoPartido.lugar}</span>
+          </div>
+        </div>
+      </Card>
+
+      {/* Cuota status strip */}
+      <Link href="/cuotas">
+        <div className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl border transition-opacity hover:opacity-90 ${
+          cuotaAlDia
+            ? "bg-emerald-50 border-emerald-100"
+            : "bg-amber-50 border-amber-100"
+        }`}>
+          {cuotaAlDia
+            ? <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            : <AlertCircle  className="w-5 h-5 text-amber-600 shrink-0" />
+          }
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold">{cfg.label}</p>
-            {pendiente && (
-              <p className="text-xs text-[var(--muted)]">
+            <p className={`text-sm font-semibold ${cuotaAlDia ? "text-emerald-800" : "text-amber-800"}`}>
+              {cuotaAlDia ? "Cuota al día ✓" : "Tenés una cuota pendiente"}
+            </p>
+            {pendiente && "vencimiento" in pendiente && (
+              <p className="text-xs text-amber-600 mt-0.5">
                 {pendiente.mes} · Vence {formatDate(pendiente.vencimiento, { day: "numeric", month: "long" })}
               </p>
             )}
           </div>
           {pendiente && (
-            <p className="text-sm font-bold text-vc-blue shrink-0">{formatCurrency(pendiente.monto)}</p>
+            <span className="text-sm font-bold text-amber-700 shrink-0">{formatCurrency(pendiente.monto)}</span>
           )}
-          <ChevronRight className="w-4 h-4 text-[var(--muted)] shrink-0" />
-        </CardContent>
-      </Card>
-    </Link>
-  );
-}
+          <ChevronRight className="w-4 h-4 text-[#8892A4] shrink-0" />
+        </div>
+      </Link>
 
-export default function InicioPage() {
-  const proximoEvento = mockEventos[0];
-  const proximoPartido = mockPartidos[0];
-  const noticiaDestacada = mockNoticias.find(n => n.pinned) ?? mockNoticias[0];
-
-  return (
-    <div className="space-y-6">
-      {/* Greeting */}
+      {/* Quick actions */}
       <div>
-        <p className="text-sm text-white/60">¡Hola,</p>
-        <h1 className="text-2xl font-bold tracking-tight">{mockUser.name.split(" ")[0]}! 👋</h1>
-      </div>
-
-      {/* Cuota status */}
-      <CuotaStatusCard />
-
-      {/* Quick links */}
-      <div>
-        <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-3">¿Qué querés ver?</h2>
+        <h2 className="text-xs font-semibold text-[#8892A4] uppercase tracking-wider mb-3">Accesos rápidos</h2>
         <div className="grid grid-cols-3 gap-3">
-          {quickLinks.map(({ href, label, icon: Icon, color }) => (
+          {quickLinks.map(({ href, label, icon: Icon, bg, color }) => (
             <Link key={href} href={href}>
-              <Card className="hover:shadow-[var(--shadow)] transition-shadow cursor-pointer">
-                <CardContent className="flex flex-col items-center gap-2 py-4 px-2">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <span className="text-xs font-medium text-center leading-tight">{label}</span>
-                </CardContent>
-              </Card>
+              <div className="bg-white rounded-2xl border border-[#E8ECF4] shadow-[0_2px_8px_0_rgb(0_0_0/0.04)] p-3.5 flex flex-col items-center gap-2.5 hover:shadow-[0_4px_16px_0_rgb(0_61_165/0.10)] transition-shadow active:scale-95">
+                <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${bg}`}>
+                  <Icon className={`w-5 h-5 ${color}`} strokeWidth={1.8} />
+                </div>
+                <span className="text-xs font-semibold text-[#4A5568] text-center leading-tight">{label}</span>
+              </div>
             </Link>
           ))}
         </div>
       </div>
 
-      {/* Próximos partidos */}
+      {/* Featured news */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wider">¡A la cancha!</h2>
-          <Link href="/calendario" className="text-xs text-white/70 font-medium">Ver todo</Link>
-        </div>
-        <Card>
-          <CardContent className="py-4">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex flex-col items-center gap-0.5 min-w-0">
-                <div className="w-8 h-8 rounded-full bg-vc-blue flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">VC</span>
-                </div>
-                <span className="text-xs font-semibold truncate max-w-20 text-center">{proximoPartido.local.replace("Villa Congreso", "Villa C.")}</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-1">
-                <span className="text-xs text-[var(--muted)]">{proximoPartido.categoria}</span>
-                <div className="bg-[var(--surface-2)] rounded-lg px-3 py-1.5">
-                  <span className="text-base font-bold">VS</span>
-                </div>
-                <span className="text-xs text-[var(--muted)]">{formatShortDate(proximoPartido.fecha)} · {proximoPartido.hora}</span>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 min-w-0">
-                <div className="w-8 h-8 rounded-full bg-[var(--surface-2)] flex items-center justify-center">
-                  <span className="text-xs font-bold">{proximoPartido.visitante.split(" ").map(w => w[0]).slice(0,2).join("")}</span>
-                </div>
-                <span className="text-xs font-semibold truncate max-w-20 text-center">{proximoPartido.visitante}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Última novedad destacada */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wider">Lo nuevo</h2>
-          <Link href="/noticias" className="text-xs text-white/70 font-medium">Ver todo</Link>
+          <h2 className="text-xs font-semibold text-[#8892A4] uppercase tracking-wider">Destacado</h2>
+          <Link href="/noticias" className="text-xs text-[#003DA5] font-semibold">Ver todo →</Link>
         </div>
         <Link href={`/noticias/${noticiaDestacada.id}`}>
-          <Card className="hover:shadow-[var(--shadow)] transition-shadow cursor-pointer">
-            <CardContent className="py-4">
-              <div className="flex items-start gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-vc-blue to-vc-blue/60 flex items-center justify-center shrink-0">
-                  <Newspaper className="w-5 h-5 text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Badge variant={categoryBadgeVariant(noticiaDestacada.category)}>{noticiaDestacada.category}</Badge>
-                    <span className="text-xs text-[var(--muted)]">{formatShortDate(noticiaDestacada.date)}</span>
-                  </div>
-                  <p className="font-semibold text-sm leading-snug line-clamp-2">{noticiaDestacada.title}</p>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[var(--muted)] shrink-0 mt-0.5" />
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-      </div>
-
-      {/* Próximo evento */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wider">No te lo pierdas</h2>
-          <Link href="/eventos" className="text-xs text-white/70 font-medium">Ver todo</Link>
-        </div>
-        <Link href={`/eventos/${proximoEvento.id}`}>
-          <Card className="hover:shadow-[var(--shadow)] transition-shadow cursor-pointer overflow-hidden">
-            <div className="bg-gradient-to-r from-vc-blue to-vc-blue/80 p-4">
-              <Badge variant="blue" className="bg-white/20 text-white border-0 mb-2">{proximoEvento.category}</Badge>
-              <h3 className="text-white font-bold text-lg leading-tight">{proximoEvento.title}</h3>
-              <p className="text-white/70 text-sm mt-1">
-                {formatDate(proximoEvento.date, { weekday: "long", day: "numeric", month: "long" })} · {proximoEvento.time}
-              </p>
+          <Card className="overflow-hidden hover:shadow-[0_4px_16px_0_rgb(0_0_0/0.08)] transition-shadow">
+            <div className={`h-28 bg-gradient-to-br ${categoryGradient[noticiaDestacada.category] ?? "from-[#003DA5] to-[#0052d4]"} relative flex items-end p-4`}>
+              <Badge className="bg-white/20 text-white border-0 text-[10px]">{noticiaDestacada.category}</Badge>
             </div>
-            <CardContent className="py-3 flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-sm text-[var(--muted)]">
-                <Calendar className="w-4 h-4" />
-                <span>{proximoEvento.location}</span>
-              </div>
-              {proximoEvento.cupos && (
-                <div className="flex items-center gap-1 text-xs text-[var(--muted)]">
-                  <Users className="w-3.5 h-3.5" />
-                  <span>{proximoEvento.inscriptos}/{proximoEvento.cupos}</span>
-                </div>
-              )}
+            <CardContent className="py-3.5">
+              <p className="font-bold text-sm leading-snug text-[#0D1117] line-clamp-2">{noticiaDestacada.title}</p>
+              <p className="text-xs text-[#8892A4] mt-1 line-clamp-2">{noticiaDestacada.excerpt}</p>
+              <p className="text-[10px] text-[#8892A4] mt-2">{formatShortDate(noticiaDestacada.date)}</p>
             </CardContent>
           </Card>
         </Link>
       </div>
 
-      {/* Recent news */}
+      {/* More news */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wider">Y también...</h2>
+          <h2 className="text-xs font-semibold text-[#8892A4] uppercase tracking-wider">Más noticias</h2>
         </div>
         <div className="space-y-2">
-          {mockNoticias.slice(1, 4).map(noticia => (
+          {mockNoticias.filter(n => !n.pinned).slice(0, 3).map(noticia => (
             <Link key={noticia.id} href={`/noticias/${noticia.id}`}>
-              <Card className="hover:shadow-[var(--shadow)] transition-shadow cursor-pointer">
-                <CardContent className="py-3 flex items-center gap-3">
+              <Card className="hover:shadow-[0_4px_12px_0_rgb(0_0_0/0.07)] transition-shadow">
+                <CardContent className="py-3.5 flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${categoryGradient[noticia.category] ?? "from-[#003DA5] to-[#0052d4]"} shrink-0`} />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
+                    <div className="flex items-center gap-1.5 mb-0.5">
                       <Badge variant={categoryBadgeVariant(noticia.category)} className="text-[10px] px-1.5 py-0">{noticia.category}</Badge>
-                      <span className="text-[10px] text-[var(--muted)]">{formatShortDate(noticia.date)}</span>
+                      <span className="text-[10px] text-[#8892A4]">{formatShortDate(noticia.date)}</span>
                     </div>
-                    <p className="text-sm font-medium leading-snug line-clamp-1">{noticia.title}</p>
+                    <p className="text-sm font-semibold text-[#0D1117] leading-snug line-clamp-1">{noticia.title}</p>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-[var(--muted)] shrink-0" />
+                  <ChevronRight className="w-4 h-4 text-[#C4CBD8] shrink-0" />
                 </CardContent>
               </Card>
             </Link>
@@ -217,11 +200,11 @@ export default function InicioPage() {
         </div>
       </div>
 
-      {/* Avisos recientes de profes */}
+      {/* Coach updates */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wider">Los profes avisaron</h2>
-          <Link href="/avisos" className="text-xs text-white/70 font-medium">Ver todo</Link>
+          <h2 className="text-xs font-semibold text-[#8892A4] uppercase tracking-wider">Profes avisaron</h2>
+          <Link href="/avisos" className="text-xs text-[#003DA5] font-semibold">Ver todo →</Link>
         </div>
         <div className="space-y-2">
           {mockAvisos.slice(0, 3).map(aviso => {
@@ -229,21 +212,25 @@ export default function InicioPage() {
             const cfg = tipoCfg[aviso.tipo];
             return (
               <Link key={aviso.id} href="/avisos">
-                <Card className="hover:shadow-[var(--shadow)] transition-shadow cursor-pointer">
-                  <CardContent className="py-3 flex items-start gap-3">
-                    <Avatar className="w-8 h-8 shrink-0">
-                      <AvatarFallback className="text-xs">{profe?.initials ?? "??"}</AvatarFallback>
+                <Card className="hover:shadow-[0_4px_12px_0_rgb(0_0_0/0.07)] transition-shadow">
+                  <CardContent className="py-3.5 flex items-start gap-3">
+                    <Avatar className="w-9 h-9 shrink-0 ring-2 ring-[#E8ECF4]">
+                      <AvatarFallback className="bg-[#003DA5]/10 text-[#003DA5] text-xs font-bold">
+                        {profe?.initials ?? "??"}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
-                        <span className="text-[10px] font-semibold">{aviso.profesorName}</span>
-                        <span className="text-[10px] text-[var(--muted)]">·</span>
-                        <span className={`text-[10px] font-medium px-1.5 py-0 rounded-full ${cfg.color}`}>{cfg.label}</span>
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="text-xs font-bold text-[#0D1117]">{aviso.profesorName}</span>
+                        <span className="text-[10px] text-[#8892A4]">· {aviso.deporte}</span>
                       </div>
-                      <p className="text-sm font-medium leading-snug line-clamp-1">{aviso.titulo}</p>
-                      <p className="text-xs text-[var(--muted)] mt-0.5">{aviso.deporte} · {aviso.categoria}</p>
+                      <p className="text-sm font-semibold text-[#0D1117] line-clamp-1">{aviso.titulo}</p>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot} shrink-0`} />
+                        <span className="text-[10px] text-[#8892A4]">{cfg.label}</span>
+                      </div>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-[var(--muted)] shrink-0 mt-0.5" />
+                    <ChevronRight className="w-4 h-4 text-[#C4CBD8] shrink-0 mt-0.5" />
                   </CardContent>
                 </Card>
               </Link>
@@ -251,6 +238,7 @@ export default function InicioPage() {
           })}
         </div>
       </div>
+
     </div>
   );
 }

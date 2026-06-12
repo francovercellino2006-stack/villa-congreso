@@ -1,23 +1,13 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-// Cards scope CSS vars to dark text so they read correctly on the red page background
-const cardVars = {
-  "--fg": "#0d1117",
-  "--muted": "#6b7280",
-  "--fg-secondary": "#4b5568",
-  "--border": "#e3e7ef",
-  "--surface-2": "#f0f2f7",
-} as React.CSSProperties;
-
-export function Card({ className, style, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        "bg-white border border-[#e3e7ef] rounded-[var(--radius-lg)] shadow-[var(--shadow-sm)] text-[#0d1117]",
+        "bg-white rounded-2xl border border-[#E8ECF4] shadow-[0_2px_8px_0_rgb(0_0_0/0.05)] text-[#0D1117]",
         className
       )}
-      style={{ ...cardVars, ...style }}
       {...props}
     />
   );
@@ -28,7 +18,7 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
 }
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn("font-semibold text-base leading-tight text-[#0d1117]", className)} {...props} />;
+  return <h3 className={cn("font-semibold text-base leading-tight text-[#0D1117]", className)} {...props} />;
 }
 
 export function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {

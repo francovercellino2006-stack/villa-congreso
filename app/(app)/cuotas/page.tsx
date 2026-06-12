@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { CheckCircle2, Clock, AlertCircle, Download, CreditCard, TrendingUp } from "lucide-react";
+import { CheckCircle2, Clock, AlertCircle, Download, CreditCard, TrendingUp, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/layout/top-bar";
 import { mockCuotas } from "@/lib/mock-data";
@@ -11,100 +10,118 @@ export const metadata: Metadata = { title: "Cuotas" };
 
 function EstadoBadge({ estado }: { estado: string }) {
   if (estado === "pagado") return (
-    <span className="flex items-center gap-1 text-xs font-medium text-green-700 dark:text-green-400">
+    <span className="flex items-center gap-1 text-[10px] font-semibold text-emerald-600">
       <CheckCircle2 className="w-3.5 h-3.5" /> Pagado
     </span>
   );
   if (estado === "pendiente") return (
-    <span className="flex items-center gap-1 text-xs font-medium text-yellow-700 dark:text-yellow-400">
+    <span className="flex items-center gap-1 text-[10px] font-semibold text-amber-600">
       <Clock className="w-3.5 h-3.5" /> Pendiente
     </span>
   );
   return (
-    <span className="flex items-center gap-1 text-xs font-medium text-red-700 dark:text-red-400">
+    <span className="flex items-center gap-1 text-[10px] font-semibold text-[#C8102E]">
       <AlertCircle className="w-3.5 h-3.5" /> Vencida
     </span>
   );
 }
 
 export default function CuotasPage() {
-  const pendiente = mockCuotas.historial.find(c => c.estado === "pendiente");
-  const pagadas = mockCuotas.historial.filter(c => c.estado === "pagado");
-  const totalPagado = pagadas.reduce((sum, c) => sum + c.monto, 0);
+  const pendiente    = mockCuotas.historial.find(c => c.estado === "pendiente");
+  const pagadas      = mockCuotas.historial.filter(c => c.estado === "pagado");
+  const totalPagado  = pagadas.reduce((sum, c) => sum + c.monto, 0);
 
   return (
-    <div>
-      <PageHeader title="Cuotas" subtitle="¿Cómo venís con la cuota?" />
+    <div className="animate-fade-in">
+      <PageHeader title="Cuotas" subtitle="Tu estado de membresía" />
 
-      {/* Estado actual */}
+      {/* Main status card */}
       {pendiente ? (
-        <Card className="bg-gradient-to-r from-vc-blue to-vc-blue/80 border-0 mb-4">
-          <CardContent className="py-5">
-            <p className="text-white/70 text-sm mb-1">Tenés una cuota pendiente</p>
-            <p className="text-white text-3xl font-bold mb-0.5">{formatCurrency(pendiente.monto)}</p>
+        <Card className="mb-4 overflow-hidden border-0 shadow-[0_4px_20px_0_rgb(0_61_165/0.15)]">
+          <div className="bg-gradient-to-br from-[#003DA5] via-[#0047C0] to-[#002d7a] p-5">
+            <p className="text-white/70 text-sm mb-1">Cuota pendiente</p>
+            <p className="text-white text-4xl font-black tracking-tight mb-0.5">{formatCurrency(pendiente.monto)}</p>
             {"vencimiento" in pendiente && (
-              <p className="text-white/70 text-sm">{pendiente.mes} · Vence {formatDate(pendiente.vencimiento, { day: "numeric", month: "long" })}</p>
+              <p className="text-white/60 text-sm">
+                {pendiente.mes} · Vence {formatDate(pendiente.vencimiento, { day: "numeric", month: "long" })}
+              </p>
             )}
-            <Button className="mt-4 bg-white text-vc-blue hover:bg-white/90 w-full" size="lg">
+          </div>
+          <CardContent className="py-4">
+            <Button className="w-full h-11 bg-[#003DA5] hover:bg-[#002d7a] text-white rounded-xl font-bold shadow-sm" size="lg">
               <CreditCard className="w-4 h-4" /> Pagar con Mercado Pago
             </Button>
           </CardContent>
         </Card>
       ) : (
-        <Card className="bg-gradient-to-r from-green-500 to-green-600 border-0 mb-4">
-          <CardContent className="py-5 flex items-center gap-4">
-            <CheckCircle2 className="w-10 h-10 text-white/80 shrink-0" />
-            <div>
-              <p className="text-white font-bold text-lg">¡Estás al día!</p>
-              <p className="text-white/80 text-sm">Próximo vencimiento: {formatDate(mockCuotas.proxVencimiento, { day: "numeric", month: "long" })}</p>
+        <Card className="mb-4 overflow-hidden border-0 shadow-[0_4px_20px_0_rgb(22_163_74/0.15)]">
+          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 p-5 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+              <CheckCircle2 className="w-7 h-7 text-white" />
             </div>
-          </CardContent>
+            <div>
+              <p className="text-white font-black text-lg leading-tight">¡Estás al día!</p>
+              <p className="text-white/80 text-sm mt-0.5">
+                Próximo vencimiento: {formatDate(mockCuotas.proxVencimiento, { day: "numeric", month: "long" })}
+              </p>
+            </div>
+          </div>
         </Card>
       )}
 
-      {/* Resumen */}
-      <div className="grid grid-cols-2 gap-3 mb-5">
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-3 mb-4">
         <Card>
           <CardContent className="py-4">
-            <div className="flex items-center gap-2 mb-1">
-              <TrendingUp className="w-4 h-4 text-green-600" />
-              <p className="text-xs text-[var(--muted)]">Total pagado</p>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center">
+                <TrendingUp className="w-4 h-4 text-emerald-600" />
+              </div>
+              <p className="text-xs font-medium text-[#8892A4]">Total pagado</p>
             </div>
-            <p className="font-bold text-lg">{formatCurrency(totalPagado)}</p>
-            <p className="text-xs text-[var(--muted)]">{pagadas.length} cuotas</p>
+            <p className="font-black text-xl text-[#0D1117]">{formatCurrency(totalPagado)}</p>
+            <p className="text-xs text-[#8892A4] mt-0.5">{pagadas.length} cuotas</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="py-4">
-            <div className="flex items-center gap-2 mb-1">
-              <Clock className="w-4 h-4 text-yellow-600" />
-              <p className="text-xs text-[var(--muted)]">Próximo vencimiento</p>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center">
+                <Clock className="w-4 h-4 text-amber-600" />
+              </div>
+              <p className="text-xs font-medium text-[#8892A4]">Próx. vencimiento</p>
             </div>
-            <p className="font-bold text-lg">{pendiente ? formatCurrency(pendiente.monto) : "—"}</p>
-            <p className="text-xs text-[var(--muted)]">{pendiente ? "Pendiente" : "Sin deudas"}</p>
+            <p className="font-black text-xl text-[#0D1117]">{pendiente ? formatCurrency(pendiente.monto) : "—"}</p>
+            <p className="text-xs text-[#8892A4] mt-0.5">{pendiente ? "Pendiente" : "Sin deudas"}</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Historial */}
+      {/* History */}
       <Card>
-        <CardHeader>
-          <CardTitle>Lo que pagaste</CardTitle>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base font-bold">Historial</CardTitle>
         </CardHeader>
-        <CardContent className="pt-3">
-          <div className="space-y-0 divide-y divide-[var(--border)]">
+        <CardContent className="pt-0">
+          <div className="divide-y divide-[#F0F3FA]">
             {mockCuotas.historial.map(cuota => (
-              <div key={cuota.id} className="flex items-center justify-between py-3">
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium">{cuota.mes}</p>
-                  <EstadoBadge estado={cuota.estado} />
+              <div key={cuota.id} className="flex items-center justify-between py-3.5 gap-3">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <div className={`w-2 h-2 rounded-full shrink-0 ${
+                    cuota.estado === "pagado" ? "bg-emerald-500" :
+                    cuota.estado === "pendiente" ? "bg-amber-500" : "bg-[#C8102E]"
+                  }`} />
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-[#0D1117]">{cuota.mes}</p>
+                    <EstadoBadge estado={cuota.estado} />
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <p className="text-sm font-semibold">{formatCurrency(cuota.monto)}</p>
+                <div className="flex items-center gap-3 shrink-0">
+                  <p className="text-sm font-bold text-[#0D1117]">{formatCurrency(cuota.monto)}</p>
                   {cuota.estado === "pagado" && "comprobante" in cuota && (
-                    <Button variant="ghost" size="icon-sm">
-                      <Download className="w-4 h-4" />
-                    </Button>
+                    <button className="w-8 h-8 flex items-center justify-center rounded-xl bg-[#F0F3FA] hover:bg-[#E8ECF4] transition-colors">
+                      <Download className="w-3.5 h-3.5 text-[#8892A4]" />
+                    </button>
                   )}
                 </div>
               </div>

@@ -3,27 +3,26 @@ import { useState } from "react";
 import Link from "next/link";
 import { Pin, ChevronDown, ChevronUp, Megaphone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { PageHeader } from "@/components/layout/top-bar";
 import { mockAvisos, mockProfesores, type AvisoTipo } from "@/lib/mock-data";
 
 const deportes = ["Todos", "Fútbol", "Básquet", "Hockey", "Patín", "Gimnasia"];
 
-const tipoCfg: Record<AvisoTipo, { label: string; color: string }> = {
-  general:      { label: "General",      color: "bg-[#f1f3f7] text-[#6b7280]" },
-  suspensión:   { label: "Suspendido",   color: "bg-[#C8102E]/10 text-[#C8102E]" },
-  recordatorio: { label: "Recordatorio", color: "bg-amber-50 text-amber-700" },
-  resultado:    { label: "Resultado",    color: "bg-emerald-50 text-emerald-700" },
-  convocatoria: { label: "Convocatoria", color: "bg-[#003DA5]/10 text-[#003DA5]" },
+const tipoCfg: Record<AvisoTipo, { label: string; bg: string; text: string; dot: string }> = {
+  general:      { label: "General",      bg: "bg-[#F4F6FA]",          text: "text-[#6b7280]",   dot: "bg-[#9399ab]"   },
+  suspensión:   { label: "Suspendido",   bg: "bg-[#C8102E]/8",        text: "text-[#C8102E]",   dot: "bg-[#C8102E]"   },
+  recordatorio: { label: "Recordatorio", bg: "bg-amber-50",            text: "text-amber-700",   dot: "bg-amber-500"   },
+  resultado:    { label: "Resultado",    bg: "bg-emerald-50",          text: "text-emerald-700", dot: "bg-emerald-500" },
+  convocatoria: { label: "Convocatoria", bg: "bg-[#003DA5]/8",         text: "text-[#003DA5]",   dot: "bg-[#003DA5]"   },
 };
 
-const deporteColor: Record<string, string> = {
+const avatarColor: Record<string, string> = {
   "Fútbol":   "bg-[#003DA5]/10 text-[#003DA5]",
-  "Básquet":  "bg-[#003DA5]/10 text-[#003DA5]",
-  "Hockey":   "bg-[#003DA5]/10 text-[#003DA5]",
-  "Patín":    "bg-[#003DA5]/10 text-[#003DA5]",
-  "Gimnasia": "bg-[#003DA5]/10 text-[#003DA5]",
+  "Básquet":  "bg-[#1d4ed8]/10 text-[#1d4ed8]",
+  "Hockey":   "bg-[#0d9488]/10 text-[#0d9488]",
+  "Patín":    "bg-[#7c3aed]/10 text-[#7c3aed]",
+  "Gimnasia": "bg-[#059669]/10 text-[#059669]",
 };
 
 function formatRelative(dateStr: string) {
@@ -39,51 +38,64 @@ function formatRelative(dateStr: string) {
 
 function AvisoCard({ aviso }: { aviso: typeof mockAvisos[0] }) {
   const [expanded, setExpanded] = useState(false);
-  const cfg = tipoCfg[aviso.tipo];
-  const short = aviso.contenido.length > 140;
-  const texto = !short || expanded ? aviso.contenido : aviso.contenido.slice(0, 140) + "…";
+  const cfg   = tipoCfg[aviso.tipo];
   const profe = mockProfesores.find(p => p.id === aviso.profesorId);
+  const short = aviso.contenido.length > 160;
+  const texto = !short || expanded ? aviso.contenido : aviso.contenido.slice(0, 160) + "…";
+  const av    = avatarColor[aviso.deporte] ?? "bg-[#003DA5]/10 text-[#003DA5]";
 
   return (
-    <Card className={aviso.fijado ? "border-vc-blue/40" : ""}>
-      {aviso.fijado && <div className="h-0.5 bg-vc-blue rounded-t-[14px]" />}
+    <Card className={`overflow-hidden transition-shadow hover:shadow-[0_4px_16px_0_rgb(0_0_0/0.08)] ${aviso.fijado ? "border-[#003DA5]/30" : ""}`}>
+      {aviso.fijado && (
+        <div className="h-1 bg-gradient-to-r from-[#003DA5] to-[#0052d4]" />
+      )}
       <CardContent className="py-4">
-        {/* Header */}
-        <div className="flex items-start gap-3 mb-3">
-          <Avatar className="w-9 h-9 shrink-0">
-            <AvatarFallback className="text-xs">{profe?.initials ?? "??"}</AvatarFallback>
+
+        {/* Author row */}
+        <div className="flex items-start gap-3">
+          <Avatar className={`w-10 h-10 shrink-0 ring-2 ring-[#E8ECF4] ${av}`}>
+            <AvatarFallback className={`text-xs font-bold ${av}`}>
+              {profe?.initials ?? "??"}
+            </AvatarFallback>
           </Avatar>
+
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-sm font-semibold">{aviso.profesorName}</span>
-              {aviso.fijado && <Pin className="w-3 h-3 text-vc-blue shrink-0" />}
+              <span className="text-sm font-bold text-[#0D1117]">{aviso.profesorName}</span>
+              {aviso.fijado && <Pin className="w-3 h-3 text-[#003DA5]" />}
             </div>
-            <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
-              <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${deporteColor[aviso.deporte] ?? ""}`}>
-                {aviso.deporte}
-              </span>
-              <span className="text-[10px] text-[var(--muted)]">·</span>
-              <span className="text-[10px] text-[var(--muted)]">{aviso.categoria}</span>
-              <span className="text-[10px] text-[var(--muted)]">·</span>
-              <span className="text-[10px] text-[var(--muted)]">{formatRelative(aviso.fecha)}</span>
+            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+              <span className="text-[10px] font-semibold text-[#8892A4]">{aviso.deporte}</span>
+              <span className="text-[10px] text-[#C4CBD8]">·</span>
+              <span className="text-[10px] text-[#8892A4]">{aviso.categoria}</span>
+              <span className="text-[10px] text-[#C4CBD8]">·</span>
+              <span className="text-[10px] text-[#8892A4]">{formatRelative(aviso.fecha)}</span>
             </div>
           </div>
-          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0 ${cfg.color}`}>
+
+          {/* Tipo badge */}
+          <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full shrink-0 ${cfg.bg} ${cfg.text}`}>
             {cfg.label}
           </span>
         </div>
 
         {/* Content */}
-        <p className="text-sm font-semibold mb-1.5">{aviso.titulo}</p>
-        <p className="text-sm text-[var(--fg-secondary)] leading-relaxed">{texto}</p>
-        {short && (
-          <button
-            onClick={() => setExpanded(e => !e)}
-            className="flex items-center gap-1 text-xs text-vc-blue font-medium mt-2"
-          >
-            {expanded ? <><ChevronUp className="w-3 h-3" /> Ver menos</> : <><ChevronDown className="w-3 h-3" /> Ver más</>}
-          </button>
-        )}
+        <div className="mt-3">
+          <p className="text-sm font-bold text-[#0D1117] mb-1.5">{aviso.titulo}</p>
+          <p className="text-sm text-[#4A5568] leading-relaxed">{texto}</p>
+          {short && (
+            <button
+              onClick={() => setExpanded(e => !e)}
+              className="flex items-center gap-1 text-xs text-[#003DA5] font-semibold mt-2 hover:underline"
+            >
+              {expanded
+                ? <><ChevronUp className="w-3.5 h-3.5" /> Ver menos</>
+                : <><ChevronDown className="w-3.5 h-3.5" /> Ver más</>
+              }
+            </button>
+          )}
+        </div>
+
       </CardContent>
     </Card>
   );
@@ -100,30 +112,30 @@ export default function AvisosPage() {
     });
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <PageHeader
         title="Avisos"
-        subtitle="Lo que publicaron los profes"
+        subtitle="Novedades de tus profes"
         action={
           <Link
             href="/mi-panel"
-            className="flex items-center gap-1.5 bg-vc-blue text-white text-xs font-semibold px-3 h-8 rounded-full hover:bg-vc-blue-hover transition-colors"
+            className="flex items-center gap-1.5 bg-[#003DA5] text-white text-xs font-bold px-3.5 h-8 rounded-full hover:bg-[#002d7a] transition-colors shadow-sm"
           >
             <Megaphone className="w-3.5 h-3.5" /> Mi panel
           </Link>
         }
       />
 
-      {/* Filter chips */}
-      <div className="flex gap-2 overflow-x-auto pb-3 mb-5 -mx-4 px-4" style={{ scrollbarWidth: "none" }}>
+      {/* Sport filters */}
+      <div className="flex gap-2 overflow-x-auto pb-3 mb-5 -mx-4 px-4 scrollbar-none">
         {deportes.map(d => (
           <button
             key={d}
             onClick={() => setFiltro(d)}
-            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+            className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
               filtro === d
-                ? "bg-vc-blue text-white"
-                : "bg-[var(--surface)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--fg)]"
+                ? "bg-[#003DA5] text-white shadow-sm"
+                : "bg-white border border-[#E8ECF4] text-[#8892A4] hover:text-[#0D1117]"
             }`}
           >
             {d}
@@ -133,16 +145,18 @@ export default function AvisosPage() {
 
       {/* Feed */}
       {filtrados.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Megaphone className="w-10 h-10 text-[var(--muted)] mb-3" />
-          <p className="text-sm font-medium">Acá no hay nada todavía</p>
-          <p className="text-xs text-[var(--muted)] mt-1">Cuando los profes publiquen algo, va a aparecer acá.</p>
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-[#F0F3FA] flex items-center justify-center mb-4">
+            <Megaphone className="w-7 h-7 text-[#8892A4]" />
+          </div>
+          <p className="text-sm font-bold text-[#0D1117]">Sin avisos por acá</p>
+          <p className="text-xs text-[#8892A4] mt-1 max-w-[200px]">
+            Cuando los profes publiquen algo, va a aparecer acá.
+          </p>
         </div>
       ) : (
         <div className="space-y-3">
-          {filtrados.map(aviso => (
-            <AvisoCard key={aviso.id} aviso={aviso} />
-          ))}
+          {filtrados.map(aviso => <AvisoCard key={aviso.id} aviso={aviso} />)}
         </div>
       )}
     </div>

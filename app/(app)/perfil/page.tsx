@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Shield, Trophy, Dumbbell, Mail, Phone, Calendar, Settings, LogOut, ChevronRight, CreditCard } from "lucide-react";
+import Image from "next/image";
+import { Shield, CreditCard, Trophy, Settings, LogOut, ChevronRight, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PageHeader } from "@/components/layout/top-bar";
 import { mockUser, mockCuotas } from "@/lib/mock-data";
@@ -12,24 +12,28 @@ export const metadata: Metadata = { title: "Mi Perfil" };
 
 export default function PerfilPage() {
   return (
-    <div>
+    <div className="animate-fade-in">
       <PageHeader title="Mi perfil" />
 
-      {/* Profile header */}
-      <Card className="mb-4 overflow-hidden">
-        <div className="h-20 bg-gradient-to-r from-vc-blue to-vc-blue/70" />
+      {/* Profile hero */}
+      <Card className="mb-4 overflow-hidden border-0 shadow-[0_4px_20px_0_rgb(0_61_165/0.12)]">
+        <div className="h-24 bg-gradient-to-br from-[#003DA5] via-[#0047C0] to-[#002d7a]" />
         <CardContent className="pt-0 -mt-10 pb-5">
           <div className="flex items-end justify-between mb-4">
-            <Avatar className="w-20 h-20 ring-4 ring-[var(--surface)] ring-offset-0">
+            <Avatar className="w-20 h-20 ring-4 ring-white shadow-lg">
               <AvatarImage src="" alt={mockUser.name} />
-              <AvatarFallback className="text-xl">{getInitials(mockUser.name)}</AvatarFallback>
+              <AvatarFallback className="bg-[#003DA5] text-white text-xl font-black">
+                {getInitials(mockUser.name)}
+              </AvatarFallback>
             </Avatar>
-            <Button variant="outline" size="sm">Editar</Button>
+            <button className="px-4 h-8 rounded-full border border-[#E8ECF4] text-xs font-semibold text-[#4A5568] bg-white hover:bg-[#F0F3FA] transition-colors mt-10">
+              Editar
+            </button>
           </div>
-          <h2 className="text-xl font-bold">{mockUser.name}</h2>
-          <p className="text-sm text-[var(--muted)]">Nº Socio: {mockUser.socioNumber}</p>
-          <div className="flex items-center gap-2 mt-2">
-            <Badge variant="blue">{mockUser.category}</Badge>
+          <h2 className="text-xl font-black text-[#0D1117]">{mockUser.name}</h2>
+          <p className="text-sm text-[#8892A4] mt-0.5">Socio #{mockUser.socioNumber}</p>
+          <div className="flex items-center gap-2 mt-3 flex-wrap">
+            <Badge variant="blue" className="font-semibold">{mockUser.category}</Badge>
             {mockUser.sports.map(s => (
               <Badge key={s} variant="default">{s}</Badge>
             ))}
@@ -38,55 +42,68 @@ export default function PerfilPage() {
       </Card>
 
       {/* Member card */}
-      <Card className="mb-4 bg-gradient-to-br from-vc-blue via-vc-blue/90 to-vc-blue/70 border-0">
-        <CardContent className="py-5">
-          <div className="flex items-start justify-between mb-6">
+      <Card className="mb-4 overflow-hidden border-0 shadow-[0_4px_20px_0_rgb(0_61_165/0.15)]">
+        <div className="bg-gradient-to-br from-[#003DA5] via-[#0047C0] to-[#002d7a] p-5 relative overflow-hidden">
+          {/* Background decoration */}
+          <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-white/5" />
+          <div className="absolute -right-4 top-8 w-20 h-20 rounded-full bg-white/5" />
+
+          <div className="flex items-start justify-between mb-6 relative z-10">
             <div>
-              <p className="text-white/60 text-xs">Club Atlético</p>
-              <p className="text-white font-bold text-lg leading-tight">Villa Congreso</p>
+              <p className="text-white/50 text-xs font-medium uppercase tracking-wider">Club Atlético</p>
+              <p className="text-white font-black text-lg leading-tight">Villa Congreso</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-              <span className="text-white font-black text-sm">VC</span>
+            <Image src="/escudo.png" alt="VC" width={44} height={43} className="opacity-90 drop-shadow-md" />
+          </div>
+
+          <div className="relative z-10">
+            <p className="text-white font-black text-xl tracking-wide mb-4">{mockUser.name}</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white/50 text-[9px] uppercase tracking-widest font-semibold">Socio</p>
+                <p className="text-white font-bold text-sm">#{mockUser.socioNumber}</p>
+              </div>
+              <div>
+                <p className="text-white/50 text-[9px] uppercase tracking-widest font-semibold">Desde</p>
+                <p className="text-white font-bold text-sm">{formatDate(mockUser.joinedAt, { year: "numeric", month: "long" })}</p>
+              </div>
+              <div>
+                <p className="text-white/50 text-[9px] uppercase tracking-widest font-semibold">Estado</p>
+                <p className="text-emerald-300 font-bold text-sm flex items-center gap-1">
+                  <Star className="w-3 h-3 fill-current" /> Al día
+                </p>
+              </div>
             </div>
           </div>
-          <p className="text-white font-bold text-xl tracking-wider mb-1">{mockUser.name}</p>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-white/60 text-[10px] uppercase">Socio</p>
-              <p className="text-white font-semibold">#{mockUser.socioNumber}</p>
-            </div>
-            <div>
-              <p className="text-white/60 text-[10px] uppercase">Miembro desde</p>
-              <p className="text-white font-semibold">{formatDate(mockUser.joinedAt, { year: "numeric", month: "long" })}</p>
-            </div>
-            <div>
-              <p className="text-white/60 text-[10px] uppercase">Estado</p>
-              <p className="text-green-300 font-semibold">Al día ✓</p>
-            </div>
-          </div>
-        </CardContent>
+        </div>
       </Card>
 
-      {/* Settings links */}
+      {/* Menu links */}
       <Card className="mb-4">
-        <CardContent className="py-0 divide-y divide-[var(--border)]">
+        <CardContent className="py-1 divide-y divide-[#F4F6FA]">
           {[
-            { icon: CreditCard, label: "Mis cuotas", href: "/cuotas" },
-            { icon: Trophy, label: "Mis eventos", href: "/eventos" },
-            { icon: Settings, label: "Ajustes", href: "#" },
-          ].map(({ icon: Icon, label, href }) => (
-            <a key={label} href={href} className="flex items-center gap-3 py-4 hover:bg-[var(--surface-2)] transition-colors -mx-5 px-5">
-              <Icon className="w-5 h-5 text-[var(--muted)]" />
-              <span className="text-sm font-medium flex-1">{label}</span>
-              <ChevronRight className="w-4 h-4 text-[var(--muted)]" />
+            { icon: CreditCard, label: "Mis cuotas", sub: "Ver historial de pagos", href: "/cuotas" },
+            { icon: Trophy,     label: "Mis eventos", sub: "Eventos inscriptos",    href: "/eventos" },
+            { icon: Settings,   label: "Ajustes",    sub: "Configuración de cuenta", href: "#"      },
+          ].map(({ icon: Icon, label, sub, href }) => (
+            <a key={label} href={href} className="flex items-center gap-3.5 py-4 hover:bg-[#F4F6FA] transition-colors -mx-5 px-5 first:rounded-t-2xl last:rounded-b-2xl">
+              <div className="w-9 h-9 rounded-xl bg-[#F0F3FA] flex items-center justify-center shrink-0">
+                <Icon className="w-4.5 h-4.5 text-[#4A5568]" strokeWidth={1.8} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-[#0D1117]">{label}</p>
+                <p className="text-xs text-[#8892A4]">{sub}</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-[#C4CBD8] shrink-0" />
             </a>
           ))}
         </CardContent>
       </Card>
 
-      <Button variant="ghost" className="w-full text-danger justify-start gap-2">
-        <LogOut className="w-4 h-4" /> Salir de la app
-      </Button>
+      <button className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl border border-[#E8ECF4] bg-white text-[#C8102E] hover:bg-red-50 transition-colors">
+        <LogOut className="w-4 h-4" />
+        <span className="text-sm font-semibold">Cerrar sesión</span>
+      </button>
     </div>
   );
 }

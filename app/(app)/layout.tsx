@@ -3,9 +3,9 @@ import { BottomNav } from "@/components/layout/bottom-nav";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-dvh flex flex-col">
+    <div className="min-h-dvh flex flex-col bg-[#F4F6FA]">
       <TopBar />
-      <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-5 pb-24">
+      <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-5 pb-28">
         {children}
       </main>
       <BottomNav />

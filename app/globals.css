@@ -1,62 +1,47 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Club colors */
   --color-vc-red: #C8102E;
   --color-vc-red-hover: #a50d25;
   --color-vc-blue: #003DA5;
   --color-vc-blue-hover: #002d7a;
 
-  /* Semantic tokens */
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-border: var(--border);
   --color-muted: var(--muted);
 
-  /* Status */
   --color-success: #16a34a;
   --color-warning: #d97706;
   --color-danger: #dc2626;
 
-  /* Fonts */
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
 
-  /* Radius */
   --radius-sm: 6px;
   --radius: 10px;
   --radius-lg: 14px;
   --radius-xl: 20px;
-  --radius-2xl: 28px;
+  --radius-2xl: 24px;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.07), 0 1px 2px -1px rgb(0 0 0 / 0.05);
-  --shadow: 0 4px 12px 0 rgb(0 0 0 / 0.09), 0 2px 4px -2px rgb(0 0 0 / 0.06);
-  --shadow-lg: 0 10px 30px -3px rgb(0 0 0 / 0.12), 0 4px 8px -4px rgb(0 0 0 / 0.07);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --shadow: 0 4px 16px 0 rgb(0 0 0 / 0.07), 0 1px 4px -1px rgb(0 0 0 / 0.04);
+  --shadow-lg: 0 12px 32px -4px rgb(0 0 0 / 0.10), 0 4px 8px -4px rgb(0 0 0 / 0.05);
+  --shadow-card: 0 2px 8px 0 rgb(0 0 0 / 0.06), 0 0 0 1px rgb(0 0 0 / 0.03);
 }
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
-  --bg: #C8102E;
-  --surface: #ffffff;
-  --surface-2: #f0f2f7;
-  --border: #e3e7ef;
-  --muted: rgba(255,255,255,0.6);
-  --fg: #ffffff;
-  --fg-secondary: rgba(255,255,255,0.85);
-}
-
-.dark {
-  --bg: #8a0b20;
-  --surface: #1a0c10;
-  --surface-2: #2a1218;
-  --border: #3d1820;
-  --muted: #7a5560;
-  --fg: #f5e8eb;
-  --fg-secondary: #c49aa5;
+  --bg: #F4F6FA;
+  --surface: #FFFFFF;
+  --surface-2: #F0F3FA;
+  --border: #E8ECF4;
+  --muted: #8892A4;
+  --fg: #0D1117;
+  --fg-secondary: #4A5568;
 }
 
 *, *::before, *::after {
@@ -72,25 +57,38 @@ html {
 }
 
 body {
-  background-color: #C8102E;
+  background-color: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
   min-height: 100dvh;
   overflow-x: hidden;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
-/* Focus */
 :focus-visible {
   outline: 2px solid var(--color-vc-blue);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* PWA safe areas */
 .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 16px); }
 .pt-safe { padding-top: env(safe-area-inset-top); }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-fade-in {
+  animation: fadeIn 0.25s ease both;
+}
