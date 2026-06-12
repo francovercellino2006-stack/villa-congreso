@@ -1,0 +1,82 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { VCShield } from "@/components/vc-logo";
+
+export const metadata: Metadata = { title: "Iniciar sesión" };
+
+export default function LoginPage() {
+  return (
+    <div className="min-h-dvh flex flex-col items-center justify-center px-5 bg-vc-red">
+      <div className="w-full max-w-sm">
+        <Link href="/" className="flex items-center gap-1.5 text-sm text-white/60 mb-8 hover:text-white transition-colors">
+          <ArrowLeft className="w-4 h-4" /> Volver
+        </Link>
+
+        {/* Shield logo */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="relative mb-4">
+            <div className="absolute inset-0 bg-black/20 blur-2xl rounded-full scale-150" />
+            <VCShield size={80} className="relative drop-shadow-xl" />
+          </div>
+          <h1 className="text-2xl font-black text-white tracking-tight">Villa Congreso</h1>
+          <p className="text-sm text-white/60 mt-1">Club Atlético · Viedma, Río Negro</p>
+        </div>
+
+        {/* Auth card */}
+        <div className="bg-white rounded-2xl p-6 shadow-2xl">
+          {/* Google */}
+          <button className="w-full h-11 flex items-center justify-center gap-3 border border-[#e3e7ef] rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors mb-4 text-[#0d1117]">
+            <svg className="w-4 h-4" viewBox="0 0 24 24">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Continuar con Google
+          </button>
+
+          <div className="flex items-center gap-3 my-4">
+            <hr className="flex-1 border-[#e3e7ef]" />
+            <span className="text-xs text-[#9399ab]">o con email</span>
+            <hr className="flex-1 border-[#e3e7ef]" />
+          </div>
+
+          <div className="space-y-3">
+            <input
+              type="email"
+              placeholder="correo@ejemplo.com"
+              className="w-full h-10 px-3 rounded-xl border border-[#e3e7ef] bg-[#f7f8fc] text-sm text-[#0d1117] placeholder:text-[#9399ab] focus:outline-none focus:ring-2 focus:ring-vc-red focus:border-transparent transition-all"
+            />
+            <input
+              type="password"
+              placeholder="Contraseña"
+              className="w-full h-10 px-3 rounded-xl border border-[#e3e7ef] bg-[#f7f8fc] text-sm text-[#0d1117] placeholder:text-[#9399ab] focus:outline-none focus:ring-2 focus:ring-vc-red focus:border-transparent transition-all"
+            />
+            <Link href="/inicio">
+              <button className="w-full h-11 bg-vc-red text-white rounded-xl text-sm font-semibold hover:bg-vc-red-hover transition-colors mt-1">
+                Ingresar
+              </button>
+            </Link>
+          </div>
+
+          <p className="text-center text-xs text-[#9399ab] mt-4">
+            ¿No tenés acceso?{" "}
+            <a href="#" className="text-vc-red font-medium">Contactá al club</a>
+          </p>
+        </div>
+
+        {/* Demo */}
+        <Link href="/inicio" className="block mt-4">
+          <button className="w-full h-11 border border-white/30 text-white rounded-xl text-sm font-medium hover:bg-white/10 transition-colors">
+            Entrar como demo
+          </button>
+        </Link>
+
+        <p className="text-center text-[10px] text-white/30 mt-6">
+          Club Atlético Villa Congreso · Fundado el 2 de agosto de 1928
+        </p>
+      </div>
+    </div>
+  );
+}
