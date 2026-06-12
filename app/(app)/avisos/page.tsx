@@ -11,19 +11,19 @@ import { mockAvisos, mockProfesores, type AvisoTipo } from "@/lib/mock-data";
 const deportes = ["Todos", "Fútbol", "Básquet", "Hockey", "Patín", "Gimnasia"];
 
 const tipoCfg: Record<AvisoTipo, { label: string; color: string }> = {
-  general:      { label: "General",      color: "bg-[var(--surface-2)] text-[var(--fg)]" },
-  suspensión:   { label: "Suspendido",   color: "bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400" },
-  recordatorio: { label: "Recordatorio", color: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400" },
-  resultado:    { label: "Resultado",    color: "bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400" },
-  convocatoria: { label: "Convocatoria", color: "bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400" },
+  general:      { label: "General",      color: "bg-[#f1f3f7] text-[#6b7280]" },
+  suspensión:   { label: "Suspendido",   color: "bg-[#C8102E]/10 text-[#C8102E]" },
+  recordatorio: { label: "Recordatorio", color: "bg-amber-50 text-amber-700" },
+  resultado:    { label: "Resultado",    color: "bg-emerald-50 text-emerald-700" },
+  convocatoria: { label: "Convocatoria", color: "bg-[#003DA5]/10 text-[#003DA5]" },
 };
 
 const deporteColor: Record<string, string> = {
-  "Fútbol":   "bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400",
-  "Básquet":  "bg-purple-100 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400",
-  "Hockey":   "bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400",
-  "Patín":    "bg-pink-100 text-pink-600 dark:bg-pink-900/20 dark:text-pink-400",
-  "Gimnasia": "bg-orange-100 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400",
+  "Fútbol":   "bg-[#003DA5]/10 text-[#003DA5]",
+  "Básquet":  "bg-[#003DA5]/10 text-[#003DA5]",
+  "Hockey":   "bg-[#003DA5]/10 text-[#003DA5]",
+  "Patín":    "bg-[#003DA5]/10 text-[#003DA5]",
+  "Gimnasia": "bg-[#003DA5]/10 text-[#003DA5]",
 };
 
 function formatRelative(dateStr: string) {

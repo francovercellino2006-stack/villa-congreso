@@ -14,20 +14,20 @@ import { formatDate, formatShortDate, formatCurrency, getInitials } from "@/lib/
 export const metadata: Metadata = { title: "Inicio" };
 
 const quickLinks = [
-  { href: "/noticias", label: "Noticias", icon: Newspaper, color: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" },
-  { href: "/avisos", label: "Avisos", icon: Megaphone, color: "bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400" },
-  { href: "/horarios", label: "Horarios", icon: Clock, color: "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400" },
-  { href: "/cuotas", label: "Cuotas", icon: CreditCard, color: "bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400" },
-  { href: "/calendario", label: "Agenda", icon: Calendar, color: "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400" },
-  { href: "/perfil", label: "Mi Perfil", icon: Users, color: "bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400" },
+  { href: "/noticias",   label: "Noticias",  icon: Newspaper,  color: "bg-[#003DA5]/10 text-[#003DA5]" },
+  { href: "/avisos",     label: "Avisos",    icon: Megaphone,  color: "bg-[#C8102E]/10 text-[#C8102E]" },
+  { href: "/horarios",   label: "Horarios",  icon: Clock,      color: "bg-[#003DA5]/10 text-[#003DA5]" },
+  { href: "/cuotas",     label: "Cuotas",    icon: CreditCard, color: "bg-amber-50 text-amber-700" },
+  { href: "/calendario", label: "Agenda",    icon: Calendar,   color: "bg-[#003DA5]/10 text-[#003DA5]" },
+  { href: "/perfil",     label: "Mi Perfil", icon: Users,      color: "bg-[#003DA5]/10 text-[#003DA5]" },
 ];
 
 const tipoCfg: Record<AvisoTipo, { label: string; color: string }> = {
-  general:      { label: "General",      color: "bg-[var(--surface-2)] text-[var(--fg)]" },
-  suspensión:   { label: "Suspendido",   color: "bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400" },
-  recordatorio: { label: "Recordatorio", color: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400" },
-  resultado:    { label: "Resultado",    color: "bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400" },
-  convocatoria: { label: "Convocatoria", color: "bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400" },
+  general:      { label: "General",      color: "bg-[#f1f3f7] text-[#6b7280]" },
+  suspensión:   { label: "Suspendido",   color: "bg-[#C8102E]/10 text-[#C8102E]" },
+  recordatorio: { label: "Recordatorio", color: "bg-amber-50 text-amber-700" },
+  resultado:    { label: "Resultado",    color: "bg-emerald-50 text-emerald-700" },
+  convocatoria: { label: "Convocatoria", color: "bg-[#003DA5]/10 text-[#003DA5]" },
 };
 
 function CuotaStatusCard() {

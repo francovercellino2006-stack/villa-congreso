@@ -10,11 +10,11 @@ export const metadata: Metadata = { title: "Horarios" };
 const deportes = ["Todos", "Fútbol", "Básquet", "Hockey", "Patín", "Gimnasia"];
 
 const colorMap: Record<string, string> = {
-  "Fútbol": "bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400",
-  "Básquet": "bg-purple-100 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400",
-  "Hockey": "bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400",
-  "Patín": "bg-pink-100 text-pink-600 dark:bg-pink-900/20 dark:text-pink-400",
-  "Gimnasia": "bg-orange-100 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400",
+  "Fútbol":   "bg-[#003DA5]/10 text-[#003DA5]",
+  "Básquet":  "bg-[#003DA5]/10 text-[#003DA5]",
+  "Hockey":   "bg-[#003DA5]/10 text-[#003DA5]",
+  "Patín":    "bg-[#003DA5]/10 text-[#003DA5]",
+  "Gimnasia": "bg-[#003DA5]/10 text-[#003DA5]",
 };
 
 export default function HorariosPage() {
@@ -49,7 +49,7 @@ export default function HorariosPage() {
         {Object.entries(grouped).map(([deporte, horarios]) => (
           <div key={deporte}>
             <div className="flex items-center gap-2 mb-3">
-              <div className={`w-2 h-2 rounded-full ${colorMap[deporte]?.split(" ")[0].replace("100", "500") ?? "bg-gray-400"}`} />
+              <div className="w-2 h-2 rounded-full bg-[#003DA5]" />
               <h2 className="font-semibold text-sm">{deporte}</h2>
               <span className="text-xs text-[var(--muted)]">({horarios.length} actividades)</span>
             </div>

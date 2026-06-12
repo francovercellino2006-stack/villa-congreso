@@ -18,11 +18,11 @@ const tipoOpciones: { value: AvisoTipo; label: string; emoji: string }[] = [
 ];
 
 const tipoCfg: Record<AvisoTipo, { color: string }> = {
-  general:      { color: "bg-[var(--surface-2)] text-[var(--fg)]" },
-  suspensión:   { color: "bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400" },
-  recordatorio: { color: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400" },
-  resultado:    { color: "bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400" },
-  convocatoria: { color: "bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400" },
+  general:      { color: "bg-[#f1f3f7] text-[#6b7280]" },
+  suspensión:   { color: "bg-[#C8102E]/10 text-[#C8102E]" },
+  recordatorio: { color: "bg-amber-50 text-amber-700" },
+  resultado:    { color: "bg-emerald-50 text-emerald-700" },
+  convocatoria: { color: "bg-[#003DA5]/10 text-[#003DA5]" },
 };
 
 function formatRelative(dateStr: string) {

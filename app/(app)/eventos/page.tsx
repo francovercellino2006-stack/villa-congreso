@@ -28,15 +28,15 @@ export default function EventosPage() {
               <Card className="hover:shadow-[var(--shadow)] transition-shadow cursor-pointer overflow-hidden">
                 <CardContent className="py-4 flex gap-4">
                   {/* Date badge */}
-                  <div className="flex flex-col items-center justify-center w-12 h-14 rounded-xl bg-vc-blue/10 shrink-0">
-                    <span className="text-xl font-bold text-vc-blue leading-none">{day}</span>
-                    <span className="text-xs text-vc-blue font-medium uppercase">{month}</span>
+                  <div className="flex flex-col items-center justify-center w-12 h-14 rounded-xl bg-[#003DA5] shrink-0">
+                    <span className="text-xl font-bold text-white leading-none">{day}</span>
+                    <span className="text-[10px] text-white/80 font-semibold uppercase">{month}</span>
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 mb-1">
                       <Badge variant={categoryBadgeVariant(evento.category)} className="text-[10px]">{evento.category}</Badge>
-                      {evento.confirmed && <Badge variant="green" className="text-[10px]">Confirmado</Badge>}
+                      {evento.confirmed && <Badge variant="green" className="text-[10px]">✓ Confirmado</Badge>}
                     </div>
                     <h3 className="font-semibold text-sm leading-snug mb-1.5">{evento.title}</h3>
 
@@ -59,7 +59,7 @@ export default function EventosPage() {
                         </div>
                         <div className="h-1 bg-[var(--surface-2)] rounded-full overflow-hidden">
                           <div
-                            className={`h-full rounded-full transition-all ${pctFull > 80 ? "bg-vc-red" : "bg-green-500"}`}
+                            className={`h-full rounded-full transition-all ${pctFull > 80 ? "bg-[#C8102E]" : "bg-[#003DA5]"}`}
                             style={{ width: `${pctFull}%` }}
                           />
                         </div>
