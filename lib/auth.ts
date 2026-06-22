@@ -3,6 +3,7 @@ export type UserRole = "socio" | "profe";
 export interface AuthSession {
   role: UserRole;
   profesorId?: string;
+  categoriasActivas?: string[];
 }
 
 const KEY = "dp_auth";

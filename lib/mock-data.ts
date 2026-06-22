@@ -233,10 +233,10 @@ export const mockPartidos = [
 ];
 
 export const mockProfesores = [
-  { id: "1", name: "Carlos Medina", deporte: "Fútbol", categorias: ["Infantil Sub-10"], initials: "CM" },
-  { id: "2", name: "Lucas Ferreyra", deporte: "Fútbol", categorias: ["Pre-infante Sub-8"], initials: "LF" },
-  { id: "3", name: "Diego Paredes", deporte: "Fútbol", categorias: ["Juvenil Sub-17", "Primera División"], initials: "DP" },
-  { id: "4", name: "Alejandro Ruiz", deporte: "Básquet", categorias: ["Infantil Sub-12", "Juvenil Sub-16"], initials: "AR" },
+  { id: "1", name: "Carlos Medina", deporte: "Fútbol", categorias: ["Infantil (Sub-10)"], initials: "CM" },
+  { id: "2", name: "Lucas Ferreyra", deporte: "Fútbol", categorias: ["Pre-infante (Sub-8)"], initials: "LF" },
+  { id: "3", name: "Diego Paredes", deporte: "Fútbol", categorias: ["Juvenil (Sub-17)", "Primera División"], initials: "DP" },
+  { id: "4", name: "Alejandro Ruiz", deporte: "Básquet", categorias: ["Infantil (Sub-12)", "Juvenil (Sub-16)"], initials: "AR" },
   { id: "5", name: "Valentina Sosa", deporte: "Hockey", categorias: ["Damas (todas)"], initials: "VS" },
   { id: "6", name: "Sofía Carrizo", deporte: "Patín", categorias: ["Niñas/os"], initials: "SC" },
   { id: "7", name: "Marina Torres", deporte: "Gimnasia", categorias: ["Adultos"], initials: "MT" },

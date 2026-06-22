@@ -7,6 +7,7 @@ interface AuthContextValue {
   ready: boolean;
   login: (session: AuthSession) => void;
   logout: () => void;
+  updateSession: (patch: Partial<AuthSession>) => void;
 }
 
 const AuthContext = createContext<AuthContextValue>({
@@ -14,6 +15,7 @@ const AuthContext = createContext<AuthContextValue>({
   ready: false,
   login: () => {},
   logout: () => {},
+  updateSession: () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -35,8 +37,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
   }
 
+  function updateSession(patch: Partial<AuthSession>) {
+    setSession(prev => {
+      if (!prev) return prev;
+      const next = { ...prev, ...patch };
+      saveSession(next);
+      return next;
+    });
+  }
+
   return (
-    <AuthContext.Provider value={{ session, ready, login, logout }}>
+    <AuthContext.Provider value={{ session, ready, login, logout, updateSession }}>
       {children}
     </AuthContext.Provider>
   );
