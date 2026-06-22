@@ -1,13 +1,20 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Send, Pin, Trash2, ChevronDown, ChevronUp, Megaphone, Plus } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, Send, Pin, Trash2, ChevronDown, ChevronUp, Plus, Users } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { mockAvisos, mockProfesores, type AvisoTipo } from "@/lib/mock-data";
+import { mockAvisos, mockProfesores, mockComunidades, type AvisoTipo, type ComunidadId } from "@/lib/mock-data";
 
-// In a real app this comes from session/auth
-const PROFE_SIMULADO = mockProfesores[2]; // Diego Paredes
+const PROFE_SIMULADO = mockProfesores[2]; // Diego Paredes — Fútbol
+
+const deporteAComunidad: Record<string, ComunidadId> = {
+  "Fútbol":   "futbol",
+  "Básquet":  "basquet",
+  "Hockey":   "hockey",
+  "Patín":    "patin",
+  "Gimnasia": "gimnasia",
+};
 
 const tipoOpciones: { value: AvisoTipo; label: string; emoji: string }[] = [
   { value: "general",      label: "General",      emoji: "📢" },
@@ -17,12 +24,12 @@ const tipoOpciones: { value: AvisoTipo; label: string; emoji: string }[] = [
   { value: "resultado",    label: "Resultado",     emoji: "🏆" },
 ];
 
-const tipoCfg: Record<AvisoTipo, { color: string }> = {
-  general:      { color: "bg-[#f1f3f7] text-[#6b7280]" },
-  suspensión:   { color: "bg-[#C8102E]/10 text-[#C8102E]" },
-  recordatorio: { color: "bg-amber-50 text-amber-700" },
-  resultado:    { color: "bg-emerald-50 text-emerald-700" },
-  convocatoria: { color: "bg-[#15803D]/10 text-[#15803D]" },
+const tipoCfg: Record<AvisoTipo, { bg: string; text: string }> = {
+  general:      { bg: "bg-[#F4F6FA]",     text: "text-[#566070]"   },
+  suspensión:   { bg: "bg-[#C8102E]/10",  text: "text-[#C8102E]"   },
+  recordatorio: { bg: "bg-amber-50",      text: "text-amber-700"   },
+  resultado:    { bg: "bg-emerald-50",    text: "text-emerald-700" },
+  convocatoria: { bg: "bg-[#15803D]/10",  text: "text-[#15803D]"   },
 };
 
 function formatRelative(dateStr: string) {
@@ -43,7 +50,9 @@ export default function MiPanelPage() {
   const [publicado, setPublicado] = useState(false);
   const [formOpen, setFormOpen] = useState(true);
 
-  const misAvisos = mockAvisos.filter(a => a.profesorId === PROFE_SIMULADO.id);
+  const comunidadId = deporteAComunidad[PROFE_SIMULADO.deporte] ?? "futbol";
+  const comunidad   = mockComunidades.find(c => c.id === comunidadId)!;
+  const misAvisos   = mockAvisos.filter(a => a.profesorId === PROFE_SIMULADO.id);
 
   function handlePublicar() {
     if (!titulo.trim() || !contenido.trim()) return;
@@ -59,61 +68,85 @@ export default function MiPanelPage() {
 
   return (
     <div>
-      {/* Header */}
+      {/* Back */}
       <div className="flex items-center gap-2 mb-5">
-        <Link href="/avisos">
-          <button className="flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--fg)] transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Volver
-          </button>
+        <Link
+          href="/avisos"
+          className="flex items-center gap-1.5 text-sm text-[#566070] hover:text-[#0D1117] transition-colors"
+          aria-label="Volver a comunidades"
+        >
+          <ArrowLeft aria-hidden="true" className="w-4 h-4" /> Comunidades
         </Link>
       </div>
 
-      {/* Profile bar */}
-      <div className="flex items-center gap-3 mb-5 p-4 bg-[var(--surface)] border border-[var(--border)] rounded-2xl">
-        <Avatar className="w-12 h-12">
-          <AvatarFallback>{PROFE_SIMULADO.initials}</AvatarFallback>
-        </Avatar>
-        <div>
-          <p className="font-semibold">{PROFE_SIMULADO.name}</p>
-          <p className="text-xs text-[var(--muted)]">
-            {PROFE_SIMULADO.deporte} · {PROFE_SIMULADO.categorias.join(", ")}
-          </p>
+      {/* Community banner */}
+      <div className={`bg-gradient-to-br ${comunidad.gradient} rounded-2xl p-4 mb-4 shadow-sm`}>
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+            <span className="text-2xl" role="img" aria-label={comunidad.nombre}>{comunidad.emoji}</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Publicás en</p>
+            <p className="text-lg font-black text-white leading-tight">{comunidad.nombre}</p>
+            <div className="flex items-center gap-1 mt-0.5">
+              <Users aria-hidden="true" className="w-3 h-3 text-white/60" />
+              <span className="text-xs text-white/70">{comunidad.miembros} miembros lo recibirán</span>
+            </div>
+          </div>
         </div>
-        <span className="ml-auto text-xs px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400 rounded-full font-medium">
+      </div>
+
+      {/* Profile bar */}
+      <div className="flex items-center gap-3 mb-4 p-4 bg-white border border-[#E8ECF4] rounded-2xl">
+        <Avatar className={`w-11 h-11 ring-2 ring-[#E8ECF4] ${comunidad.colorBg}`}>
+          <AvatarFallback className={`text-sm font-bold ${comunidad.colorText}`}>{PROFE_SIMULADO.initials}</AvatarFallback>
+        </Avatar>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-[#0D1117]">{PROFE_SIMULADO.name}</p>
+          <p className="text-xs text-[#566070]">{PROFE_SIMULADO.categorias.join(" · ")}</p>
+        </div>
+        <span className="text-[10px] font-bold px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full">
           Profe activo
         </span>
       </div>
 
       {/* Compose form */}
-      <Card className="mb-5 overflow-hidden">
+      <Card className="mb-5 overflow-hidden border-[#E8ECF4]">
         <button
+          type="button"
           onClick={() => setFormOpen(o => !o)}
-          className="w-full flex items-center justify-between p-4 hover:bg-[var(--surface-2)] transition-colors"
+          className="w-full flex items-center justify-between p-4 hover:bg-[#F8FAFB] transition-colors"
+          aria-expanded={formOpen}
         >
           <div className="flex items-center gap-2">
-            <Plus className="w-4 h-4 text-vc-blue" />
-            <span className="font-semibold text-sm">Nuevo aviso</span>
+            <Plus aria-hidden="true" className={`w-4 h-4 ${comunidad.colorText}`} />
+            <span className="font-semibold text-sm text-[#0D1117]">Nuevo aviso</span>
           </div>
-          {formOpen ? <ChevronUp className="w-4 h-4 text-[var(--muted)]" /> : <ChevronDown className="w-4 h-4 text-[var(--muted)]" />}
+          {formOpen
+            ? <ChevronUp aria-hidden="true" className="w-4 h-4 text-[#566070]" />
+            : <ChevronDown aria-hidden="true" className="w-4 h-4 text-[#566070]" />}
         </button>
 
         {formOpen && (
-          <div className="px-4 pb-4 space-y-3 border-t border-[var(--border)] pt-4">
+          <div className="px-4 pb-4 space-y-3 border-t border-[#E8ECF4] pt-4">
+
             {/* Tipo */}
             <div>
-              <p className="text-xs font-medium text-[var(--muted)] mb-2">Tipo de aviso</p>
-              <div className="flex gap-2 flex-wrap">
+              <p className="text-xs font-semibold text-[#566070] mb-2">Tipo de aviso</p>
+              <div className="flex gap-2 flex-wrap" role="group" aria-label="Tipo de aviso">
                 {tipoOpciones.map(opt => (
                   <button
                     key={opt.value}
+                    type="button"
                     onClick={() => setTipo(opt.value)}
+                    aria-pressed={tipo === opt.value}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
                       tipo === opt.value
-                        ? `${tipoCfg[opt.value].color} border-transparent`
-                        : "border-[var(--border)] text-[var(--muted)] hover:text-[var(--fg)]"
+                        ? `${tipoCfg[opt.value].bg} ${tipoCfg[opt.value].text} border-transparent`
+                        : "border-[#E8ECF4] text-[#566070] hover:text-[#0D1117] hover:border-[#C4CBD8]"
                     }`}
                   >
-                    <span>{opt.emoji}</span> {opt.label}
+                    <span aria-hidden="true">{opt.emoji}</span> {opt.label}
                   </button>
                 ))}
               </div>
@@ -121,75 +154,97 @@ export default function MiPanelPage() {
 
             {/* Título */}
             <div>
+              <label htmlFor="aviso-titulo" className="text-xs font-semibold text-[#566070] mb-1.5 block">
+                Título <span aria-hidden="true" className="text-[#C8102E]">*</span>
+              </label>
               <input
+                id="aviso-titulo"
                 type="text"
-                placeholder="Título del aviso…"
+                placeholder="Ej: Entrenamiento suspendido el martes…"
                 value={titulo}
                 onChange={e => setTitulo(e.target.value)}
                 maxLength={80}
-                className="w-full h-10 px-3 rounded-xl border border-[var(--border)] bg-[var(--bg)] text-sm font-medium placeholder:text-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-vc-blue focus:border-transparent transition-all"
+                aria-required="true"
+                className="w-full h-10 px-3 rounded-xl border border-[#E8ECF4] bg-white text-sm font-medium text-[#0D1117] placeholder:text-[#9AA3AF] focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all"
+                style={{ "--tw-ring-color": comunidad.color } as React.CSSProperties}
               />
-              <p className="text-[10px] text-[var(--muted)] text-right mt-1">{titulo.length}/80</p>
+              <p className="text-[10px] text-[#566070] text-right mt-1">{titulo.length}/80</p>
             </div>
 
             {/* Contenido */}
             <div>
+              <label htmlFor="aviso-contenido" className="text-xs font-semibold text-[#566070] mb-1.5 block">
+                Mensaje <span aria-hidden="true" className="text-[#C8102E]">*</span>
+              </label>
               <textarea
-                placeholder="Escribí el mensaje para tus alumnos…"
+                id="aviso-contenido"
+                placeholder={`Escribí las novedades para la comunidad de ${comunidad.nombre}…`}
                 value={contenido}
                 onChange={e => setContenido(e.target.value)}
                 rows={4}
                 maxLength={600}
-                className="w-full px-3 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--bg)] text-sm placeholder:text-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-vc-blue focus:border-transparent transition-all resize-none leading-relaxed"
+                aria-required="true"
+                className="w-full px-3 py-2.5 rounded-xl border border-[#E8ECF4] bg-white text-sm text-[#0D1117] placeholder:text-[#9AA3AF] focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all resize-none leading-relaxed"
               />
-              <p className="text-[10px] text-[var(--muted)] text-right mt-1">{contenido.length}/600</p>
+              <p className="text-[10px] text-[#566070] text-right mt-1">{contenido.length}/600</p>
             </div>
 
             {/* Fijar */}
             <label className="flex items-center gap-2.5 cursor-pointer select-none">
               <div
+                role="switch"
+                aria-checked={fijado}
+                tabIndex={0}
                 onClick={() => setFijado(f => !f)}
-                className={`w-10 h-5 rounded-full transition-colors relative shrink-0 ${fijado ? "bg-vc-blue" : "bg-[var(--border)]"}`}
+                onKeyDown={e => e.key === " " && setFijado(f => !f)}
+                className={`w-10 h-5 rounded-full transition-colors relative shrink-0 cursor-pointer`}
+                style={{ background: fijado ? comunidad.color : "#D1D5DB" }}
               >
                 <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${fijado ? "translate-x-5" : "translate-x-0.5"}`} />
               </div>
-              <div>
-                <p className="text-sm font-medium">Fijar aviso</p>
-                <p className="text-[10px] text-[var(--muted)]">Aparece primero y destacado en el feed</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-[#0D1117]">Fijar aviso</p>
+                <p className="text-[10px] text-[#566070]">Aparece primero y destacado en el feed</p>
               </div>
-              <Pin className={`w-4 h-4 ml-auto shrink-0 ${fijado ? "text-vc-blue" : "text-[var(--muted)]"}`} />
+              <Pin aria-hidden="true" className={`w-4 h-4 ml-auto shrink-0 ${fijado ? comunidad.colorText : "text-[#C4CBD8]"}`} />
             </label>
 
             {/* Preview */}
             {(titulo || contenido) && (
-              <div className="bg-[var(--surface-2)] rounded-xl p-3 border border-[var(--border)]">
-                <p className="text-[10px] text-[var(--muted)] mb-2 font-medium uppercase tracking-wide">Vista previa</p>
+              <div className="bg-[#F8FAFB] rounded-xl p-3 border border-[#E8ECF4]">
+                <p className="text-[10px] text-[#566070] mb-2 font-bold uppercase tracking-wider">Vista previa</p>
                 <div className="flex items-center gap-2 mb-2">
-                  <Avatar className="w-6 h-6">
-                    <AvatarFallback className="text-[9px]">{PROFE_SIMULADO.initials}</AvatarFallback>
+                  <Avatar className={`w-7 h-7 ${comunidad.colorBg}`}>
+                    <AvatarFallback className={`text-[10px] font-bold ${comunidad.colorText}`}>{PROFE_SIMULADO.initials}</AvatarFallback>
                   </Avatar>
-                  <span className="text-xs font-semibold">{PROFE_SIMULADO.name}</span>
-                  <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ml-auto ${tipoCfg[tipo].color}`}>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs font-bold text-[#0D1117]">{PROFE_SIMULADO.name}</span>
+                    <span className={`text-[10px] font-semibold ml-1.5 ${comunidad.colorText}`}>{comunidad.nombre}</span>
+                  </div>
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0 ${tipoCfg[tipo].bg} ${tipoCfg[tipo].text}`}>
                     {tipoOpciones.find(o => o.value === tipo)?.label}
                   </span>
                 </div>
-                {titulo && <p className="text-xs font-semibold mb-1">{titulo}</p>}
-                {contenido && <p className="text-xs text-[var(--fg-secondary)] leading-relaxed line-clamp-3">{contenido}</p>}
+                {titulo    && <p className="text-xs font-bold text-[#0D1117] mb-1">{titulo}</p>}
+                {contenido && <p className="text-xs text-[#4A5568] leading-relaxed line-clamp-3">{contenido}</p>}
               </div>
             )}
 
             {/* Submit */}
             {publicado ? (
-              <div className="flex items-center justify-center gap-2 h-11 bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-xl text-sm font-semibold">
-                ✓ ¡Publicado!
+              <div className="flex items-center justify-center gap-2 h-11 bg-emerald-50 text-emerald-700 rounded-xl text-sm font-semibold" role="status">
+                ✓ ¡Publicado en {comunidad.nombre}!
               </div>
             ) : (
               <button
+                type="button"
                 onClick={handlePublicar}
                 disabled={!canPublish}
-                className="w-full h-11 bg-vc-blue text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-vc-blue-hover transition-colors"
+                className="w-full h-11 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+                style={{ background: canPublish ? comunidad.color : undefined }}
               >
-                <Send className="w-4 h-4" /> Publicar aviso
+                <Send aria-hidden="true" className="w-4 h-4" />
+                Publicar en {comunidad.nombre} {comunidad.emoji}
               </button>
             )}
           </div>
@@ -198,34 +253,43 @@ export default function MiPanelPage() {
 
       {/* Mis publicaciones */}
       <div>
-        <p className="text-sm font-semibold text-[var(--muted)] uppercase tracking-wider mb-3">
-          Lo que publicaste ({misAvisos.length})
+        <p className="text-[10px] font-bold text-[#566070] uppercase tracking-widest mb-3">
+          Mis publicaciones ({misAvisos.length})
         </p>
         <div className="space-y-3">
-          {misAvisos.map(aviso => (
-            <Card key={aviso.id} className={aviso.fijado ? "border-vc-blue/30" : ""}>
-              {aviso.fijado && <div className="h-0.5 bg-vc-blue rounded-t-[14px]" />}
-              <CardContent className="py-3.5">
-                <div className="flex items-start justify-between gap-2 mb-1.5">
-                  <div className="flex items-center gap-1.5 flex-wrap flex-1">
-                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${tipoCfg[aviso.tipo].color}`}>
-                      {tipoOpciones.find(o => o.value === aviso.tipo)?.label}
-                    </span>
-                    {aviso.fijado && <Pin className="w-3 h-3 text-vc-blue" />}
+          {misAvisos.map(aviso => {
+            const cfg = tipoCfg[aviso.tipo];
+            return (
+              <Card key={aviso.id} className={`overflow-hidden border-[#E8ECF4] ${aviso.fijado ? `border-l-4` : ""}`}
+                style={aviso.fijado ? { borderLeftColor: comunidad.color } : undefined}
+              >
+                <CardContent className="py-3.5">
+                  <div className="flex items-start justify-between gap-2 mb-1.5">
+                    <div className="flex items-center gap-1.5 flex-wrap flex-1">
+                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${cfg.bg} ${cfg.text}`}>
+                        {tipoOpciones.find(o => o.value === aviso.tipo)?.label}
+                      </span>
+                      {aviso.fijado && <Pin aria-hidden="true" className={`w-3 h-3 ${comunidad.colorText}`} />}
+                      <span className={`text-[10px] font-semibold ${comunidad.colorText}`}>{aviso.deporte}</span>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <time dateTime={aviso.fecha} className="text-[10px] text-[#566070]">{formatRelative(aviso.fecha)}</time>
+                      <button
+                        type="button"
+                        aria-label={`Eliminar aviso: ${aviso.titulo}`}
+                        className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 text-[#C4CBD8] hover:text-[#C8102E] transition-colors"
+                      >
+                        <Trash2 aria-hidden="true" className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 shrink-0">
-                    <span className="text-[10px] text-[var(--muted)]">{formatRelative(aviso.fecha)}</span>
-                    <button className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 text-[var(--muted)] hover:text-red-500 transition-colors">
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-                <p className="text-sm font-semibold leading-snug">{aviso.titulo}</p>
-                <p className="text-xs text-[var(--muted)] mt-0.5">{aviso.categoria}</p>
-                <p className="text-xs text-[var(--fg-secondary)] mt-1.5 leading-relaxed line-clamp-2">{aviso.contenido}</p>
-              </CardContent>
-            </Card>
-          ))}
+                  <p className="text-sm font-bold text-[#0D1117] leading-snug">{aviso.titulo}</p>
+                  <p className="text-xs text-[#566070] mt-0.5">{aviso.categoria}</p>
+                  <p className="text-xs text-[#4A5568] mt-1.5 leading-relaxed line-clamp-2">{aviso.contenido}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </div>
