@@ -39,7 +39,9 @@ export default function CuotasPage() {
       {pendiente ? (
         <Card className="mb-4 overflow-hidden border-0 shadow-[0_4px_20px_0_rgb(0_61_165/0.15)]">
           <div className="bg-gradient-to-br from-[#15803D] via-[#0F6B30] to-[#052E16] p-5">
-            <p className="text-white/70 text-sm mb-1">Cuota pendiente</p>
+            <p className="text-white/70 text-sm mb-1">
+              Cuota pendiente{pendiente.deporte && ` · ${pendiente.deporte}`}
+            </p>
             <p className="text-white text-4xl font-black tracking-tight mb-0.5">{formatCurrency(pendiente.monto)}</p>
             {"vencimiento" in pendiente && (
               <p className="text-white/60 text-sm">
@@ -115,7 +117,14 @@ export default function CuotasPage() {
                     cuota.estado === "pendiente" ? "bg-amber-500" : "bg-[#C8102E]"
                   }`} />
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-[#0D1117]">{cuota.mes}</p>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <p className="text-sm font-semibold text-[#0D1117]">{cuota.mes}</p>
+                      {cuota.deporte && (
+                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-[#15803D]/8 text-[#15803D]">
+                          {cuota.deporte}
+                        </span>
+                      )}
+                    </div>
                     <EstadoBadge estado={cuota.estado} />
                   </div>
                 </div>

@@ -130,6 +130,7 @@ export default function InicioPage() {
             </p>
             {pendiente && "vencimiento" in pendiente && (
               <p className="text-xs text-amber-600 mt-0.5">
+                {pendiente.deporte && <span className="font-bold">{pendiente.deporte} · </span>}
                 {pendiente.mes} · Vence {formatDate(pendiente.vencimiento, { day: "numeric", month: "long" })}
               </p>
             )}

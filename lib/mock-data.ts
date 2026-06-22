@@ -191,9 +191,9 @@ export const mockEventos = [
 ];
 
 type CuotaItem =
-  | { id: string; mes: string; monto: number; estado: "pendiente"; vencimiento: string }
-  | { id: string; mes: string; monto: number; estado: "pagado"; fechaPago: string; comprobante: string }
-  | { id: string; mes: string; monto: number; estado: "vencida" };
+  | { id: string; mes: string; monto: number; estado: "pendiente"; vencimiento: string; deporte?: string }
+  | { id: string; mes: string; monto: number; estado: "pagado"; fechaPago: string; comprobante: string; deporte?: string }
+  | { id: string; mes: string; monto: number; estado: "vencida"; deporte?: string };
 
 export const mockCuotas: {
   status: "al-dia" | "por-vencer" | "deuda";
@@ -205,12 +205,12 @@ export const mockCuotas: {
   balance: 0,
   proxVencimiento: "2026-07-15",
   historial: [
-    { id: "1", mes: "Junio 2026", monto: 8500, estado: "pendiente", vencimiento: "2026-06-15" },
-    { id: "2", mes: "Mayo 2026", monto: 8500, estado: "pagado", fechaPago: "2026-05-12", comprobante: "REC-0485" },
-    { id: "3", mes: "Abril 2026", monto: 8000, estado: "pagado", fechaPago: "2026-04-09", comprobante: "REC-0421" },
-    { id: "4", mes: "Marzo 2026", monto: 8000, estado: "pagado", fechaPago: "2026-03-11", comprobante: "REC-0378" },
-    { id: "5", mes: "Febrero 2026", monto: 7500, estado: "pagado", fechaPago: "2026-02-14", comprobante: "REC-0320" },
-    { id: "6", mes: "Enero 2026", monto: 7500, estado: "pagado", fechaPago: "2026-01-10", comprobante: "REC-0265" },
+    { id: "1", mes: "Junio 2026",    monto: 8500, estado: "pendiente", vencimiento: "2026-06-15", deporte: "Fútbol"  },
+    { id: "2", mes: "Mayo 2026",     monto: 8500, estado: "pagado", fechaPago: "2026-05-12", comprobante: "REC-0485", deporte: "Fútbol"  },
+    { id: "3", mes: "Abril 2026",    monto: 8000, estado: "pagado", fechaPago: "2026-04-09", comprobante: "REC-0421", deporte: "Básquet" },
+    { id: "4", mes: "Marzo 2026",    monto: 8000, estado: "pagado", fechaPago: "2026-03-11", comprobante: "REC-0378", deporte: "Fútbol"  },
+    { id: "5", mes: "Febrero 2026",  monto: 7500, estado: "pagado", fechaPago: "2026-02-14", comprobante: "REC-0320", deporte: "Básquet" },
+    { id: "6", mes: "Enero 2026",    monto: 7500, estado: "pagado", fechaPago: "2026-01-10", comprobante: "REC-0265", deporte: "Fútbol"  },
   ],
 };
 
