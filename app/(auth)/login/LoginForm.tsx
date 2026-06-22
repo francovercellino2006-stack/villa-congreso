@@ -1,18 +1,22 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 type FormErrors = { email?: string; password?: string };
 
+const EMAIL_MAX = 254; // RFC 5321
+const PASSWORD_MIN = 8; // ISO/IEC 27002 §5.17 — mínimo 8 caracteres
+const PASSWORD_MAX = 128;
+
 function validateEmail(v: string) {
   if (!v) return "El correo es obligatorio";
+  if (v.length > EMAIL_MAX) return `Máximo ${EMAIL_MAX} caracteres`;
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return "Ingresá un correo válido";
 }
 
 function validatePassword(v: string) {
   if (!v) return "La contraseña es obligatoria";
-  if (v.length < 6) return "Mínimo 6 caracteres";
+  if (v.length < PASSWORD_MIN) return `Mínimo ${PASSWORD_MIN} caracteres`;
 }
 
 export function LoginForm() {
@@ -60,28 +64,43 @@ export function LoginForm() {
         Continuar con Google
       </button>
 
-      <div className="flex items-center gap-3 my-4">
+      <div className="flex items-center gap-3 my-4" role="separator" aria-label="o con email">
         <hr className="flex-1 border-[#E8ECF4]" />
-        <span className="text-xs text-[#566070] font-medium">o con email</span>
+        <span className="text-xs text-[#566070] font-medium" aria-hidden="true">o con email</span>
         <hr className="flex-1 border-[#E8ECF4]" />
       </div>
 
-      {/* Live region for screen reader feedback */}
+      {/* ISO/IEC 27701 — aviso de tratamiento de datos */}
+      <p className="text-[10px] text-[#566070] bg-[#F4F6FA] rounded-xl px-3 py-2 mb-4 leading-relaxed">
+        <strong className="text-[#0D1117]">Privacidad:</strong> tus datos son usados exclusivamente para autenticar tu acceso como socio. No se comparten con terceros. Consulta nuestra{" "}
+        <a
+          href="/privacidad"
+          className="text-[#15803D] underline underline-offset-2"
+        >
+          política de privacidad
+        </a>
+        .
+      </p>
+
+      {/* Live region — ISO 9241-171 */}
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         {emailError && <span>Error en correo: {emailError}</span>}
         {passwordError && <span>Error en contraseña: {passwordError}</span>}
       </div>
 
       <div className="space-y-4">
-        {/* Email */}
+        {/* Email — ISO/IEC 27002 §5.17 */}
         <div>
           <label htmlFor="email" className="block text-xs font-semibold text-[#0D1117] mb-1.5">
-            Correo electrónico
+            Correo electrónico <span aria-hidden="true" className="text-[#C8102E]">*</span>
           </label>
           <input
             id="email"
             type="email"
+            inputMode="email"
             autoComplete="email"
+            spellCheck={false}
+            maxLength={EMAIL_MAX}
             aria-required="true"
             aria-invalid={!!emailError}
             aria-describedby={emailError ? "email-error" : undefined}
@@ -100,18 +119,20 @@ export function LoginForm() {
           )}
         </div>
 
-        {/* Password */}
+        {/* Password — ISO/IEC 27002 §5.17 */}
         <div>
           <label htmlFor="password" className="block text-xs font-semibold text-[#0D1117] mb-1.5">
-            Contraseña
+            Contraseña <span aria-hidden="true" className="text-[#C8102E]">*</span>
           </label>
           <input
             id="password"
             type="password"
             autoComplete="current-password"
+            minLength={PASSWORD_MIN}
+            maxLength={PASSWORD_MAX}
             aria-required="true"
             aria-invalid={!!passwordError}
-            aria-describedby={passwordError ? "password-error" : undefined}
+            aria-describedby={passwordError ? "password-error" : "password-hint"}
             value={password}
             onChange={e => setPassword(e.target.value)}
             onBlur={() => handleBlur("password")}
@@ -120,9 +141,13 @@ export function LoginForm() {
               passwordError ? "border-[#C8102E]" : "border-[#E8ECF4]"
             }`}
           />
-          {passwordError && (
+          {passwordError ? (
             <p id="password-error" role="alert" className="mt-1 text-xs text-[#C8102E] font-medium">
               {passwordError}
+            </p>
+          ) : (
+            <p id="password-hint" className="mt-1 text-[10px] text-[#566070]">
+              Mínimo {PASSWORD_MIN} caracteres
             </p>
           )}
         </div>
@@ -137,7 +162,10 @@ export function LoginForm() {
 
       <p className="text-center text-xs text-[#566070] mt-4">
         ¿No tenés acceso?{" "}
-        <a href="#" className="text-[#15803D] font-semibold underline-offset-2 hover:underline">
+        <a
+          href="mailto:contacto@deportivopatagones.com.ar"
+          className="text-[#15803D] font-semibold underline-offset-2 hover:underline"
+        >
           Contactá al club
         </a>
       </p>

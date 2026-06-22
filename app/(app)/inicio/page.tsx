@@ -74,7 +74,7 @@ export default function InicioPage() {
             {/* Local */}
             <div className="flex flex-col items-center gap-2 flex-1">
               <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center">
-                <Image src="/escudo.png" alt="DP" width={40} height={39} />
+                <Image src="/escudo.png" alt="Escudo Deportivo Patagones" width={40} height={39} loading="lazy" />
               </div>
               <span className="text-xs font-bold text-white text-center leading-tight">Dep. Patagones</span>
             </div>

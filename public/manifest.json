@@ -1,12 +1,16 @@
 {
-  "name": "Villa Congreso",
-  "short_name": "Villa Congreso",
-  "description": "La plataforma del Club Atlético Villa Congreso",
+  "name": "Club Deportivo Patagones",
+  "short_name": "Dep. Patagones",
+  "description": "La plataforma del Club Social y Deportivo Patagones — Carmen de Patagones, Buenos Aires, Argentina",
   "start_url": "/inicio",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#003DA5",
-  "orientation": "portrait",
+  "background_color": "#F4F6FA",
+  "theme_color": "#15803D",
+  "orientation": "portrait-primary",
+  "lang": "es-AR",
+  "dir": "ltr",
+  "categories": ["sports", "social", "lifestyle"],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -20,5 +24,8 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "screenshots": [],
+  "related_applications": [],
+  "prefer_related_applications": false
 }

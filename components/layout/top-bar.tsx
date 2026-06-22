@@ -15,7 +15,7 @@ export function TopBar({ className }: { className?: string }) {
       <div className="flex items-center justify-between h-14 px-4 max-w-2xl mx-auto">
         {/* Brand */}
         <Link href="/inicio" className="flex items-center gap-2.5">
-          <Image src="/escudo.png" alt="Escudo Deportivo Patagones" width={34} height={33} className="shrink-0 drop-shadow-sm" />
+          <Image src="/escudo.png" alt="Escudo Deportivo Patagones" width={34} height={33} priority className="shrink-0 drop-shadow-sm" />
           <div className="leading-none">
             <p className="text-[#0D1117] font-black text-sm tracking-tight">Deportivo Patagones</p>
             <p className="text-[#566070] text-[10px] font-medium">Club Atlético · Patagones</p>

@@ -27,6 +27,7 @@ export default function LoginPage() {
               alt="Escudo Deportivo Patagones"
               width={90}
               height={88}
+              priority
               className="relative drop-shadow-2xl"
             />
           </div>
