@@ -1,11 +1,10 @@
 "use client";
 import { useState, useTransition } from "react";
-import { ChevronDown, ChevronUp, LogIn, Shield, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { loginAction } from "./actions";
 import { saveSession, clearSession, type UserRole } from "@/lib/auth";
 
 export function DemoAccess() {
-  const [profeOpen, setProfeOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [loading, setLoading] = useState<string | null>(null);
 
@@ -26,7 +25,6 @@ export function DemoAccess() {
 
   return (
     <div className="space-y-2">
-      {/* Socio demo */}
       <button
         type="button"
         disabled={isPending}
@@ -35,11 +33,10 @@ export function DemoAccess() {
       >
         {loading === "socio"
           ? <><Loader2 aria-hidden="true" className="w-4 h-4 animate-spin" /> Ingresando...</>
-          : <><LogIn aria-hidden="true" className="w-4 h-4" /> Entrar como socio (demo)</>
+          : <><span aria-hidden="true">🔶</span> Entrar como socio (demo)</>
         }
       </button>
 
-      {/* Admin demo */}
       <button
         type="button"
         disabled={isPending}
@@ -48,11 +45,10 @@ export function DemoAccess() {
       >
         {loading === "admin"
           ? <><Loader2 aria-hidden="true" className="w-4 h-4 animate-spin" /> Ingresando...</>
-          : <><Shield aria-hidden="true" className="w-4 h-4" /> Entrar como administrador (demo)</>
+          : <><span aria-hidden="true">📋</span> Entrar como administrador (demo)</>
         }
       </button>
 
-      {/* Profe demo */}
       <button
         type="button"
         disabled={isPending}
@@ -61,7 +57,7 @@ export function DemoAccess() {
       >
         {loading === "profe"
           ? <><Loader2 aria-hidden="true" className="w-4 h-4 animate-spin" /> Ingresando...</>
-          : <><span aria-hidden="true">🏅</span> Entrar como profe (demo)</>
+          : <><span aria-hidden="true">🐐</span> Entrar como profe (demo)</>
         }
       </button>
     </div>

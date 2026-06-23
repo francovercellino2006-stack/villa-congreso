@@ -130,6 +130,37 @@ export default function PerfilPage() {
         </div>
       </div>
 
+      {/* ── Inscribite en un deporte ──────────────────────── */}
+      {mockComunidades.filter(c => !mockUser.comunidades.includes(c.id)).length > 0 && (
+        <div>
+          <p className="text-[10px] font-bold text-[#566070] uppercase tracking-widest mb-3">
+            Inscribite en un deporte
+          </p>
+          <div className="space-y-2">
+            {mockComunidades
+              .filter(c => !mockUser.comunidades.includes(c.id))
+              .map(comunidad => (
+                <div key={comunidad.id} className="flex items-center gap-3 bg-white border border-[#E8ECF4] rounded-2xl p-3.5">
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${comunidad.gradient} flex items-center justify-center shrink-0`}>
+                    <span className="text-lg" role="img" aria-label={comunidad.nombre}>{comunidad.emoji}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-[#0D1117]">{comunidad.nombre}</p>
+                    <p className="text-[11px] text-[#566070]">{comunidad.miembros} miembros</p>
+                  </div>
+                  <button
+                    type="button"
+                    className="text-[11px] font-bold text-white px-3 py-1.5 rounded-full shrink-0"
+                    style={{ background: comunidad.color }}
+                  >
+                    Inscribirme
+                  </button>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
       {/* ── Mis deportes ─────────────────────────────────── */}
       <div>
         <p className="text-[10px] font-bold text-[#566070] uppercase tracking-widest mb-3">
