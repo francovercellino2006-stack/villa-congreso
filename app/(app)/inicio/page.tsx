@@ -214,7 +214,10 @@ export default function InicioPage() {
           <Link href="/avisos" className="text-xs text-[#15803D] font-semibold">Ver todo →</Link>
         </div>
         <div className="space-y-2">
-          {mockAvisos.slice(0, 3).map(aviso => {
+          {mockAvisos
+            .filter(a => mockUser.comunidades.includes(a.comunidadId))
+            .slice(0, 3)
+            .map(aviso => {
             const profe = mockProfesores.find(p => p.id === aviso.profesorId);
             const cfg = tipoCfg[aviso.tipo];
             return (

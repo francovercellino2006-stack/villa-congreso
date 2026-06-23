@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Pin, ChevronDown, ChevronUp, Megaphone, Users, ChevronRight } from "lucide-react";
+import { ArrowLeft, Pin, ChevronDown, ChevronUp, Megaphone, Users, ChevronRight, Bell, BellOff } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -45,7 +45,6 @@ function AvisoCard({ aviso }: { aviso: typeof mockAvisos[0] }) {
         <div className={`h-0.5 bg-gradient-to-r ${comunidad.gradient}`} />
       )}
       <CardContent className="py-4">
-        {/* Author */}
         <div className="flex items-start gap-3">
           <Avatar className={`w-10 h-10 shrink-0 ring-2 ring-[#E8ECF4] ${comunidad.colorBg}`}>
             <AvatarFallback className={`text-xs font-bold ${comunidad.colorText}`}>
@@ -72,7 +71,6 @@ function AvisoCard({ aviso }: { aviso: typeof mockAvisos[0] }) {
           </span>
         </div>
 
-        {/* Content */}
         <div className="mt-3">
           <p className="text-sm font-bold text-[#0D1117] mb-1.5">{aviso.titulo}</p>
           <p className="text-sm text-[#4A5568] leading-relaxed">{texto}</p>
@@ -114,7 +112,6 @@ function ComunidadCard({
       className="w-full text-left bg-white rounded-2xl border border-[#E8ECF4] p-4 hover:shadow-[0_4px_16px_0_rgb(0_0_0/0.07)] transition-shadow active:scale-[0.99]"
     >
       <div className="flex items-center gap-3">
-        {/* Sport icon */}
         <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${comunidad.gradient} flex items-center justify-center shrink-0 shadow-sm`}>
           <span className="text-2xl" role="img" aria-label={comunidad.nombre}>{comunidad.emoji}</span>
         </div>
@@ -174,7 +171,6 @@ function ComunidadFeed({
 
   return (
     <div className="animate-fade-in">
-      {/* Back */}
       <button
         type="button"
         onClick={onBack}
@@ -184,7 +180,6 @@ function ComunidadFeed({
         <ArrowLeft aria-hidden="true" className="w-4 h-4" /> Comunidades
       </button>
 
-      {/* Community header */}
       <div className={`bg-gradient-to-br ${comunidad.gradient} rounded-2xl p-5 mb-5 shadow-sm`}>
         <div className="flex items-center gap-3 mb-3">
           <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
@@ -213,7 +208,6 @@ function ComunidadFeed({
         </div>
       </div>
 
-      {/* Feed */}
       {avisos.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <span className="text-4xl mb-3" role="img" aria-label="Sin novedades">{comunidad.emoji}</span>
@@ -231,9 +225,56 @@ function ComunidadFeed({
   );
 }
 
+/* ── "Para vos" combined feed ─────────────────────────── */
+
+function FeedParaVos() {
+  const misAvisos = mockAvisos
+    .filter(a => mockUser.comunidades.includes(a.comunidadId))
+    .sort((a, b) => {
+      if (a.fijado !== b.fijado) return a.fijado ? -1 : 1;
+      return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
+    });
+
+  const misComunidades = mockComunidades.filter(c => mockUser.comunidades.includes(c.id));
+
+  return (
+    <div>
+      {/* Sport filter chips */}
+      <div className="flex gap-2 overflow-x-auto pb-1 mb-4 scrollbar-none">
+        {misComunidades.map(c => (
+          <span
+            key={c.id}
+            className={`shrink-0 flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-full ${c.colorBg} ${c.colorText}`}
+          >
+            <span role="img" aria-label={c.nombre}>{c.emoji}</span>
+            {c.nombre}
+          </span>
+        ))}
+      </div>
+
+      {misAvisos.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <Bell className="w-8 h-8 text-[#566070]/40 mb-3" />
+          <p className="text-sm font-bold text-[#0D1117]">Sin novedades</p>
+          <p className="text-xs text-[#566070] mt-1">Cuando tus profes publiquen algo, aparecerá acá.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {misAvisos.map(aviso => (
+            <AvisoCard key={aviso.id} aviso={aviso} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ── Main page ─────────────────────────────────────────── */
 
+type Tab = "para-vos" | "comunidades";
+
 export default function AvisosPage() {
+  const [tab, setTab] = useState<Tab>("para-vos");
   const [comunidadActiva, setComunidadActiva] = useState<ComunidadId | null>(null);
 
   if (comunidadActiva) {
@@ -245,15 +286,17 @@ export default function AvisosPage() {
     );
   }
 
-  const misComunidades  = mockComunidades.filter(c => mockUser.comunidades.includes(c.id));
+  const misComunidades   = mockComunidades.filter(c => mockUser.comunidades.includes(c.id));
   const otrasComunidades = mockComunidades.filter(c => !mockUser.comunidades.includes(c.id));
+
+  const misAvisosCount = mockAvisos.filter(a => mockUser.comunidades.includes(a.comunidadId)).length;
 
   return (
     <div className="animate-fade-in">
       {/* Header */}
-      <div className="flex items-start justify-between gap-3 mb-5">
+      <div className="flex items-start justify-between gap-3 mb-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#0D1117]">Comunidades</h1>
+          <h1 className="text-xl font-bold tracking-tight text-[#0D1117]">Avisos</h1>
           <p className="text-sm text-[#566070] mt-0.5">Novedades de tus deportes</p>
         </div>
         <Link
@@ -264,40 +307,84 @@ export default function AvisosPage() {
         </Link>
       </div>
 
-      {/* Mis comunidades */}
-      <section aria-labelledby="mis-comunidades-label">
-        <h2 id="mis-comunidades-label" className="text-[10px] font-bold text-[#566070] uppercase tracking-widest mb-3">
-          Mis comunidades
-        </h2>
-        <div className="space-y-3 mb-6">
-          {misComunidades.map(c => (
-            <ComunidadCard
-              key={c.id}
-              comunidad={c}
-              esMiembro={true}
-              onSelect={() => setComunidadActiva(c.id)}
-            />
-          ))}
-        </div>
-      </section>
+      {/* Tabs */}
+      <div className="flex gap-1 bg-[#F0F3FA] rounded-xl p-1 mb-5">
+        <button
+          type="button"
+          onClick={() => setTab("para-vos")}
+          className={`flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold py-2 rounded-lg transition-all ${
+            tab === "para-vos"
+              ? "bg-white text-[#0D1117] shadow-sm"
+              : "text-[#566070] hover:text-[#0D1117]"
+          }`}
+        >
+          <Bell aria-hidden="true" className="w-3.5 h-3.5" />
+          Para vos
+          {misAvisosCount > 0 && (
+            <span className="text-[9px] font-bold bg-[#15803D] text-white px-1.5 py-0.5 rounded-full">
+              {misAvisosCount}
+            </span>
+          )}
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("comunidades")}
+          className={`flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold py-2 rounded-lg transition-all ${
+            tab === "comunidades"
+              ? "bg-white text-[#0D1117] shadow-sm"
+              : "text-[#566070] hover:text-[#0D1117]"
+          }`}
+        >
+          <Users aria-hidden="true" className="w-3.5 h-3.5" />
+          Comunidades
+        </button>
+      </div>
 
-      {/* Explorar */}
-      {otrasComunidades.length > 0 && (
-        <section aria-labelledby="explorar-label">
-          <h2 id="explorar-label" className="text-[10px] font-bold text-[#566070] uppercase tracking-widest mb-3">
-            Explorar más deportes
-          </h2>
-          <div className="space-y-3">
-            {otrasComunidades.map(c => (
-              <ComunidadCard
-                key={c.id}
-                comunidad={c}
-                esMiembro={false}
-                onSelect={() => setComunidadActiva(c.id)}
-              />
-            ))}
-          </div>
-        </section>
+      {/* Tab content */}
+      {tab === "para-vos" ? (
+        <FeedParaVos />
+      ) : (
+        <div>
+          {/* Mis comunidades */}
+          <section aria-labelledby="mis-comunidades-label">
+            <h2 id="mis-comunidades-label" className="text-[10px] font-bold text-[#566070] uppercase tracking-widest mb-3">
+              Mis comunidades
+            </h2>
+            <div className="space-y-3 mb-6">
+              {misComunidades.map(c => (
+                <ComunidadCard
+                  key={c.id}
+                  comunidad={c}
+                  esMiembro={true}
+                  onSelect={() => setComunidadActiva(c.id)}
+                />
+              ))}
+            </div>
+          </section>
+
+          {/* Explorar */}
+          {otrasComunidades.length > 0 && (
+            <section aria-labelledby="explorar-label">
+              <h2 id="explorar-label" className="text-[10px] font-bold text-[#566070] uppercase tracking-widest mb-3 flex items-center gap-2">
+                Explorar más deportes
+                <BellOff aria-hidden="true" className="w-3 h-3 text-[#566070]/50" />
+              </h2>
+              <p className="text-[11px] text-[#566070] mb-3 -mt-1.5">
+                No recibís avisos de estos deportes
+              </p>
+              <div className="space-y-3 opacity-80">
+                {otrasComunidades.map(c => (
+                  <ComunidadCard
+                    key={c.id}
+                    comunidad={c}
+                    esMiembro={false}
+                    onSelect={() => setComunidadActiva(c.id)}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
       )}
     </div>
   );
