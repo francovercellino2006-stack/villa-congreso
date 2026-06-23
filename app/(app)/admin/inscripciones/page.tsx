@@ -98,7 +98,7 @@ export default async function InscripcionesPage() {
         </div>
       )}
 
-      <InscripcionesPanel socios={socios} />
+      <InscripcionesPanel socios={socios} isDemo={isDemo} />
     </div>
   );
 }

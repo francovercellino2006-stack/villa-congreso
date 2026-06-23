@@ -39,9 +39,11 @@ function SportBadge({ nombre, small }: { nombre: string; small?: boolean }) {
 function SocioEditor({
   socio,
   onClose,
+  isDemo,
 }: {
   socio: Profile;
   onClose: () => void;
+  isDemo: boolean;
 }) {
   const current = socio.sports ?? [];
   const [selected, setSelected] = useState<string[]>(current);
@@ -59,6 +61,7 @@ function SocioEditor({
   }
 
   function guardar() {
+    if (isDemo) { alert("Modo demo — conectá Supabase para guardar cambios reales."); return; }
     startTransition(async () => {
       await actualizarDeportes(socio.id, selected);
       onClose();
@@ -159,10 +162,13 @@ function SocioEditor({
               <button
                 type="button"
                 disabled={isPending}
-                onClick={() => startTransition(async () => {
-                  await darDeBaja(socio.id);
-                  onClose();
-                })}
+                onClick={() => {
+                  if (isDemo) { alert("Modo demo — conectá Supabase para dar de baja reales."); return; }
+                  startTransition(async () => {
+                    await darDeBaja(socio.id);
+                    onClose();
+                  });
+                }}
                 className="flex-1 h-9 rounded-lg bg-[#C8102E] text-white text-xs font-bold hover:bg-[#A00D24] transition-colors disabled:opacity-60 flex items-center justify-center gap-1"
               >
                 {isPending
@@ -202,7 +208,7 @@ function CuotaBadge({ estado, monto }: { estado: CuotaEstado | "sin-cuota"; mont
   );
 }
 
-function SocioRow({ socio }: { socio: SocioConCuota }) {
+function SocioRow({ socio, isDemo }: { socio: SocioConCuota; isDemo: boolean }) {
   const [editing, setEditing] = useState(false);
   const sports = socio.sports ?? [];
 
@@ -249,7 +255,7 @@ function SocioRow({ socio }: { socio: SocioConCuota }) {
         </button>
 
         {editing && (
-          <SocioEditor socio={socio} onClose={() => setEditing(false)} />
+          <SocioEditor socio={socio} onClose={() => setEditing(false)} isDemo={isDemo} />
         )}
       </CardContent>
     </Card>
@@ -258,7 +264,7 @@ function SocioRow({ socio }: { socio: SocioConCuota }) {
 
 type Filtro = "todos" | string;
 
-export function InscripcionesPanel({ socios }: { socios: SocioConCuota[] }) {
+export function InscripcionesPanel({ socios, isDemo = false }: { socios: SocioConCuota[]; isDemo?: boolean }) {
   const [busqueda, setBusqueda] = useState("");
   const [filtroDeporte, setFiltroDeporte] = useState<Filtro>("todos");
 
@@ -345,7 +351,7 @@ export function InscripcionesPanel({ socios }: { socios: SocioConCuota[] }) {
       ) : (
         <div className="space-y-2">
           {filtrados.map(socio => (
-            <SocioRow key={socio.id} socio={socio} />
+            <SocioRow key={socio.id} socio={socio} isDemo={isDemo} />
           ))}
         </div>
       )}
