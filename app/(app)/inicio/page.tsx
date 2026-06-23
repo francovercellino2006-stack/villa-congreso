@@ -11,7 +11,7 @@ import { Badge, categoryBadgeVariant } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   mockUser, mockNoticias, mockEventos, mockCuotas,
-  mockPartidos, mockAvisos, mockProfesores, type AvisoTipo
+  mockPartidos, mockAvisos, mockProfesores, mockComunidades, type AvisoTipo
 } from "@/lib/mock-data";
 import { formatDate, formatShortDate, formatCurrency } from "@/lib/utils";
 
@@ -157,6 +157,40 @@ export default function InicioPage() {
           ))}
         </div>
       </div>
+
+      {/* Sport enrollment */}
+      {mockComunidades.filter(c => !mockUser.comunidades.includes(c.id)).length > 0 && (
+        <div>
+          <h2 className="text-xs font-semibold text-[#566070] uppercase tracking-wider mb-3">Inscribite en un deporte</h2>
+          <div className="space-y-2">
+            {mockComunidades
+              .filter(c => !mockUser.comunidades.includes(c.id))
+              .map(comunidad => (
+                <Card key={comunidad.id} className="hover:shadow-[0_4px_12px_0_rgb(0_0_0/0.07)] transition-shadow">
+                  <CardContent className="py-3.5 flex items-center gap-3">
+                    <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${comunidad.gradient} flex items-center justify-center shrink-0`}>
+                      <span className="text-xl" role="img" aria-label={comunidad.nombre}>{comunidad.emoji}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-[#0D1117]">{comunidad.nombre}</p>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <Users aria-hidden="true" className="w-3 h-3 text-[#566070]" />
+                        <span className="text-[11px] text-[#566070]">{comunidad.miembros} miembros</span>
+                      </div>
+                    </div>
+                    <Link
+                      href="/admin/inscripciones"
+                      className="text-[11px] font-bold text-white px-3 py-1.5 rounded-full transition-colors shrink-0"
+                      style={{ background: comunidad.color }}
+                    >
+                      Inscribirme
+                    </Link>
+                  </CardContent>
+                </Card>
+              ))}
+          </div>
+        </div>
+      )}
 
       {/* Featured news */}
       {noticiaDestacada && (

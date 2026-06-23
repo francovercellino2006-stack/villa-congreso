@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { mockUser, mockCuotas, mockHorarios, mockComunidades, mockProfesores } from "@/lib/mock-data";
 import { formatDate, formatCurrency, getInitials } from "@/lib/utils";
 import { LogoutButton } from "./LogoutButton";
+import { PerfilContent } from "./PerfilContent";
 
 export const metadata: Metadata = { title: "Mi panel" };
 
@@ -58,6 +59,7 @@ export default function PerfilPage() {
   const cuotaAlDia   = mockCuotas.status === "al-dia" && !pendiente;
 
   return (
+    <PerfilContent>
     <div className="animate-fade-in space-y-4">
 
       {/* ── Profile hero ─────────────────────────────────── */}
@@ -260,5 +262,6 @@ export default function PerfilPage() {
       {/* ── Cerrar sesión ────────────────────────────────── */}
       <LogoutButton />
     </div>
+    </PerfilContent>
   );
 }
