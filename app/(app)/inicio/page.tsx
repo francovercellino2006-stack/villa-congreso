@@ -61,57 +61,56 @@ export default function InicioPage() {
       </div>
 
       {/* Match hero card */}
-      <Card className="overflow-hidden border-0 shadow-[0_4px_20px_0_rgb(21_128_61/0.18)]">
-        <div className="bg-gradient-to-br from-[#15803D] via-[#0F6B30] to-[#052E16] p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Próximo partido</span>
-            <span className="text-[10px] bg-white/15 text-white/80 px-2 py-0.5 rounded-full font-medium">
-              {proximoPartido.deporte} · {proximoPartido.categoria}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between gap-3">
-            {/* Local */}
-            <div className="flex flex-col items-center gap-2 flex-1">
-              <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center">
-                <Image src="/escudo.png" alt="Escudo Deportivo Patagones" width={40} height={39} loading="lazy" />
-              </div>
-              <span className="text-xs font-bold text-white text-center leading-tight">Dep. Patagones</span>
+      {proximoPartido && (
+        <Card className="overflow-hidden border-0 shadow-[0_4px_20px_0_rgb(21_128_61/0.18)]">
+          <div className="bg-gradient-to-br from-[#15803D] via-[#0F6B30] to-[#052E16] p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Próximo partido</span>
+              <span className="text-[10px] bg-white/15 text-white/80 px-2 py-0.5 rounded-full font-medium">
+                {proximoPartido.deporte} · {proximoPartido.categoria}
+              </span>
             </div>
 
-            {/* VS */}
-            <div className="flex flex-col items-center gap-1 px-3">
-              <div className="bg-white/10 rounded-xl px-4 py-2">
-                <span className="text-xl font-black text-white tracking-tight">VS</span>
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-col items-center gap-2 flex-1">
+                <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center">
+                  <Image src="/escudo.png" alt="Escudo Deportivo Patagones" width={40} height={39} loading="lazy" />
+                </div>
+                <span className="text-xs font-bold text-white text-center leading-tight">Dep. Patagones</span>
               </div>
-              <div className="flex items-center gap-1.5 text-white/60">
-                <Calendar className="w-3 h-3" aria-hidden="true" />
-                <time
-                  dateTime={`${proximoPartido.fecha}T${proximoPartido.hora}`}
-                  className="text-[10px] font-medium"
-                >
-                  {formatShortDate(proximoPartido.fecha)} · {proximoPartido.hora}
-                </time>
+
+              <div className="flex flex-col items-center gap-1 px-3">
+                <div className="bg-white/10 rounded-xl px-4 py-2">
+                  <span className="text-xl font-black text-white tracking-tight">VS</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-white/60">
+                  <Calendar className="w-3 h-3" aria-hidden="true" />
+                  <time
+                    dateTime={`${proximoPartido.fecha}T${proximoPartido.hora}`}
+                    className="text-[10px] font-medium"
+                  >
+                    {formatShortDate(proximoPartido.fecha)} · {proximoPartido.hora}
+                  </time>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center gap-2 flex-1">
+                <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center">
+                  <span className="text-white font-black text-lg">
+                    {proximoPartido.visitante.split(" ").map(w => w[0]).slice(0,2).join("")}
+                  </span>
+                </div>
+                <span className="text-xs font-bold text-white text-center leading-tight">{proximoPartido.visitante}</span>
               </div>
             </div>
 
-            {/* Visitante */}
-            <div className="flex flex-col items-center gap-2 flex-1">
-              <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center">
-                <span className="text-white font-black text-lg">
-                  {proximoPartido.visitante.split(" ").map(w => w[0]).slice(0,2).join("")}
-                </span>
-              </div>
-              <span className="text-xs font-bold text-white text-center leading-tight">{proximoPartido.visitante}</span>
+            <div className="flex items-center gap-1.5 mt-4 text-white/60">
+              <MapPin className="w-3.5 h-3.5 shrink-0" />
+              <span className="text-xs">{proximoPartido.lugar}</span>
             </div>
           </div>
-
-          <div className="flex items-center gap-1.5 mt-4 text-white/60">
-            <MapPin className="w-3.5 h-3.5 shrink-0" />
-            <span className="text-xs">{proximoPartido.lugar}</span>
-          </div>
-        </div>
-      </Card>
+        </Card>
+      )}
 
       {/* Cuota status strip */}
       <Link href="/cuotas">
@@ -160,94 +159,100 @@ export default function InicioPage() {
       </div>
 
       {/* Featured news */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xs font-semibold text-[#566070] uppercase tracking-wider">Destacado</h2>
-          <Link href="/noticias" className="text-xs text-[#15803D] font-semibold">Ver todo →</Link>
+      {noticiaDestacada && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xs font-semibold text-[#566070] uppercase tracking-wider">Destacado</h2>
+            <Link href="/noticias" className="text-xs text-[#15803D] font-semibold">Ver todo →</Link>
+          </div>
+          <Link href={`/noticias/${noticiaDestacada.id}`}>
+            <Card className="overflow-hidden hover:shadow-[0_4px_16px_0_rgb(0_0_0/0.08)] transition-shadow">
+              <div className={`h-28 bg-gradient-to-br ${categoryGradient[noticiaDestacada.category] ?? "from-[#15803D] to-[#22C55E]"} relative flex items-end p-4`}>
+                <Badge className="bg-white/20 text-white border-0 text-[10px]">{noticiaDestacada.category}</Badge>
+              </div>
+              <CardContent className="py-3.5">
+                <p className="font-bold text-sm leading-snug text-[#0D1117] line-clamp-2">{noticiaDestacada.title}</p>
+                <p className="text-xs text-[#566070] mt-1 line-clamp-2">{noticiaDestacada.excerpt}</p>
+                <time dateTime={noticiaDestacada.date} className="block text-[10px] text-[#566070] mt-2">
+                  {formatShortDate(noticiaDestacada.date)}
+                </time>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
-        <Link href={`/noticias/${noticiaDestacada.id}`}>
-          <Card className="overflow-hidden hover:shadow-[0_4px_16px_0_rgb(0_0_0/0.08)] transition-shadow">
-            <div className={`h-28 bg-gradient-to-br ${categoryGradient[noticiaDestacada.category] ?? "from-[#15803D] to-[#22C55E]"} relative flex items-end p-4`}>
-              <Badge className="bg-white/20 text-white border-0 text-[10px]">{noticiaDestacada.category}</Badge>
-            </div>
-            <CardContent className="py-3.5">
-              <p className="font-bold text-sm leading-snug text-[#0D1117] line-clamp-2">{noticiaDestacada.title}</p>
-              <p className="text-xs text-[#566070] mt-1 line-clamp-2">{noticiaDestacada.excerpt}</p>
-              <time dateTime={noticiaDestacada.date} className="block text-[10px] text-[#566070] mt-2">
-                {formatShortDate(noticiaDestacada.date)}
-              </time>
-            </CardContent>
-          </Card>
-        </Link>
-      </div>
+      )}
 
       {/* More news */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xs font-semibold text-[#566070] uppercase tracking-wider">Más noticias</h2>
-        </div>
-        <div className="space-y-2">
-          {mockNoticias.filter(n => !n.pinned).slice(0, 3).map(noticia => (
-            <Link key={noticia.id} href={`/noticias/${noticia.id}`}>
-              <Card className="hover:shadow-[0_4px_12px_0_rgb(0_0_0/0.07)] transition-shadow">
-                <CardContent className="py-3.5 flex items-center gap-3">
-                  <div aria-hidden="true" className={`w-10 h-10 rounded-xl bg-gradient-to-br ${categoryGradient[noticia.category] ?? "from-[#15803D] to-[#22C55E]"} shrink-0`} />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                      <Badge variant={categoryBadgeVariant(noticia.category)} className="text-[10px] px-1.5 py-0">{noticia.category}</Badge>
-                      <time dateTime={noticia.date} className="text-[10px] text-[#566070]">{formatShortDate(noticia.date)}</time>
-                    </div>
-                    <p className="text-sm font-semibold text-[#0D1117] leading-snug line-clamp-1">{noticia.title}</p>
-                  </div>
-                  <ChevronRight aria-hidden="true" className="w-4 h-4 text-[#6B7A8D] shrink-0" />
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Coach updates */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xs font-semibold text-[#566070] uppercase tracking-wider">Profes avisaron</h2>
-          <Link href="/avisos" className="text-xs text-[#15803D] font-semibold">Ver todo →</Link>
-        </div>
-        <div className="space-y-2">
-          {mockAvisos
-            .filter(a => mockUser.comunidades.includes(a.comunidadId))
-            .slice(0, 3)
-            .map(aviso => {
-            const profe = mockProfesores.find(p => p.id === aviso.profesorId);
-            const cfg = tipoCfg[aviso.tipo];
-            return (
-              <Link key={aviso.id} href="/avisos">
+      {mockNoticias.filter(n => !n.pinned).length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xs font-semibold text-[#566070] uppercase tracking-wider">Más noticias</h2>
+          </div>
+          <div className="space-y-2">
+            {mockNoticias.filter(n => !n.pinned).slice(0, 3).map(noticia => (
+              <Link key={noticia.id} href={`/noticias/${noticia.id}`}>
                 <Card className="hover:shadow-[0_4px_12px_0_rgb(0_0_0/0.07)] transition-shadow">
-                  <CardContent className="py-3.5 flex items-start gap-3">
-                    <Avatar className="w-9 h-9 shrink-0 ring-2 ring-[#E8ECF4]">
-                      <AvatarFallback className="bg-[#15803D]/10 text-[#15803D] text-xs font-bold">
-                        {profe?.initials ?? "??"}
-                      </AvatarFallback>
-                    </Avatar>
+                  <CardContent className="py-3.5 flex items-center gap-3">
+                    <div aria-hidden="true" className={`w-10 h-10 rounded-xl bg-gradient-to-br ${categoryGradient[noticia.category] ?? "from-[#15803D] to-[#22C55E]"} shrink-0`} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 mb-0.5">
-                        <span className="text-xs font-bold text-[#0D1117]">{aviso.profesorName}</span>
-                        <span className="text-[10px] text-[#566070]">· {aviso.deporte}</span>
+                        <Badge variant={categoryBadgeVariant(noticia.category)} className="text-[10px] px-1.5 py-0">{noticia.category}</Badge>
+                        <time dateTime={noticia.date} className="text-[10px] text-[#566070]">{formatShortDate(noticia.date)}</time>
                       </div>
-                      <p className="text-sm font-semibold text-[#0D1117] line-clamp-1">{aviso.titulo}</p>
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot} shrink-0`} />
-                        <span className="text-[10px] text-[#566070]">{cfg.label}</span>
-                      </div>
+                      <p className="text-sm font-semibold text-[#0D1117] leading-snug line-clamp-1">{noticia.title}</p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-[#6B7A8D] shrink-0 mt-0.5" />
+                    <ChevronRight aria-hidden="true" className="w-4 h-4 text-[#6B7A8D] shrink-0" />
                   </CardContent>
                 </Card>
               </Link>
-            );
-          })}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Coach updates */}
+      {mockAvisos.length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xs font-semibold text-[#566070] uppercase tracking-wider">Profes avisaron</h2>
+            <Link href="/avisos" className="text-xs text-[#15803D] font-semibold">Ver todo →</Link>
+          </div>
+          <div className="space-y-2">
+            {mockAvisos
+              .filter(a => mockUser.comunidades.includes(a.comunidadId))
+              .slice(0, 3)
+              .map(aviso => {
+              const profe = mockProfesores.find(p => p.id === aviso.profesorId);
+              const cfg = tipoCfg[aviso.tipo];
+              return (
+                <Link key={aviso.id} href="/avisos">
+                  <Card className="hover:shadow-[0_4px_12px_0_rgb(0_0_0/0.07)] transition-shadow">
+                    <CardContent className="py-3.5 flex items-start gap-3">
+                      <Avatar className="w-9 h-9 shrink-0 ring-2 ring-[#E8ECF4]">
+                        <AvatarFallback className="bg-[#15803D]/10 text-[#15803D] text-xs font-bold">
+                          {profe?.initials ?? "??"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <span className="text-xs font-bold text-[#0D1117]">{aviso.profesorName}</span>
+                          <span className="text-[10px] text-[#566070]">· {aviso.deporte}</span>
+                        </div>
+                        <p className="text-sm font-semibold text-[#0D1117] line-clamp-1">{aviso.titulo}</p>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot} shrink-0`} />
+                          <span className="text-[10px] text-[#566070]">{cfg.label}</span>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-[#6B7A8D] shrink-0 mt-0.5" />
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Club info */}
       <div>
