@@ -55,7 +55,10 @@ export function LoginForm() {
         setServerError(result.error);
         return;
       }
-      router.push("/inicio");
+      const dest = result.role === "admin" ? "/admin"
+                 : result.role === "profe" ? "/mi-panel"
+                 : "/inicio";
+      router.push(dest);
     });
   }
 

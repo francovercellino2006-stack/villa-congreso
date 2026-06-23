@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Megaphone, Calendar, Trophy, LayoutDashboard, User, Shield } from "lucide-react";
+import { Home, Megaphone, Calendar, Trophy, LayoutDashboard, User, Shield, CreditCard, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/auth-provider";
 
@@ -22,11 +22,11 @@ const profeItems = [
 ];
 
 const adminItems = [
-  { href: "/admin",      label: "Admin",     icon: Shield         },
-  { href: "/avisos",     label: "Avisos",    icon: Megaphone      },
-  { href: "/inicio",     label: "Inicio",    icon: Home           },
-  { href: "/eventos",    label: "Eventos",   icon: Trophy         },
-  { href: "/perfil",     label: "Mi panel",  icon: User           },
+  { href: "/admin",                label: "Panel",         icon: Home           },
+  { href: "/admin/inscripciones",  label: "Inscripciones", icon: Users          },
+  { href: "/admin/cuotas",         label: "Cuotas",        icon: CreditCard     },
+  { href: "/avisos",               label: "Avisos",        icon: Megaphone      },
+  { href: "/perfil",               label: "Cuenta",        icon: User           },
 ];
 
 export function BottomNav() {
