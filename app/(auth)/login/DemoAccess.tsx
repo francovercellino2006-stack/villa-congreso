@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { ChevronDown, ChevronUp, LogIn } from "lucide-react";
+import { ChevronDown, ChevronUp, LogIn, Shield } from "lucide-react";
 import { saveSession } from "@/lib/auth";
 import { mockProfesores, mockComunidades } from "@/lib/mock-data";
 
@@ -25,6 +25,11 @@ export function DemoAccess() {
     window.location.href = "/avisos";
   }
 
+  function loginAdmin() {
+    saveSession({ role: "admin" });
+    window.location.href = "/admin";
+  }
+
   return (
     <div className="space-y-2">
       {/* Socio demo */}
@@ -35,6 +40,16 @@ export function DemoAccess() {
       >
         <LogIn aria-hidden="true" className="w-4 h-4" />
         Entrar como socio (demo)
+      </button>
+
+      {/* Admin demo */}
+      <button
+        type="button"
+        onClick={loginAdmin}
+        className="w-full h-11 border border-[#E8ECF4] bg-white text-[#4A5568] rounded-2xl text-sm font-semibold hover:bg-[#F0F3FA] transition-colors flex items-center justify-center gap-2"
+      >
+        <Shield aria-hidden="true" className="w-4 h-4" />
+        Entrar como administrador (demo)
       </button>
 
       {/* Profe access */}
