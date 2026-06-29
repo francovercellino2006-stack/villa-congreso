@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import { MapPin, User, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader } from "@/components/layout/top-bar";
-import { mockHorarios } from "@/lib/mock-data";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = { title: "Horarios" };
-
-const deportes = ["Todos", "Fútbol", "Básquet", "Hockey", "Patín", "Gimnasia"];
+export const revalidate = 60;
 
 const sportConfig: Record<string, { gradient: string; dot: string; lightBg: string; textColor: string }> = {
   "Fútbol":   { gradient: "from-[#15803D] to-[#22C55E]", dot: "bg-[#15803D]",  lightBg: "bg-[#15803D]/8",  textColor: "text-[#15803D]"  },
@@ -16,8 +15,16 @@ const sportConfig: Record<string, { gradient: string; dot: string; lightBg: stri
   "Gimnasia": { gradient: "from-[#059669] to-[#34d399]", dot: "bg-[#059669]",  lightBg: "bg-[#059669]/8",  textColor: "text-[#059669]"  },
 };
 
-export default function HorariosPage() {
-  const grouped = mockHorarios.reduce<Record<string, typeof mockHorarios>>((acc, h) => {
+export default async function HorariosPage() {
+  const supabase = createAdminClient();
+  const { data: horarios } = await supabase
+    .from("horarios")
+    .select("*")
+    .order("deporte");
+
+  const all = horarios ?? [];
+
+  const grouped = all.reduce<Record<string, any[]>>((acc, h: any) => {
     if (!acc[h.deporte]) acc[h.deporte] = [];
     acc[h.deporte].push(h);
     return acc;
@@ -27,31 +34,18 @@ export default function HorariosPage() {
     <div className="animate-fade-in">
       <PageHeader title="Horarios" subtitle="Cuándo y dónde entrenás" />
 
-      {/* Sport filters */}
-      <div className="flex gap-2 overflow-x-auto pb-3 mb-5 -mx-4 px-4 scrollbar-none">
-        {deportes.map((d, i) => {
-          const cfg = sportConfig[d];
-          return (
-            <button
-              key={d}
-              className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                i === 0
-                  ? "bg-[#15803D] text-white shadow-sm"
-                  : "bg-white border border-[#E8ECF4] text-[#566070] hover:text-[#0D1117]"
-              }`}
-            >
-              {d}
-            </button>
-          );
-        })}
-      </div>
+      {all.length === 0 && (
+        <div className="text-center py-16">
+          <p className="text-sm font-semibold text-[#0D1117]">No hay horarios cargados</p>
+          <p className="text-xs text-[#566070] mt-1">Cuando se carguen los horarios aparecerán acá.</p>
+        </div>
+      )}
 
       <div className="space-y-6">
-        {Object.entries(grouped).map(([deporte, horarios]) => {
+        {Object.entries(grouped).map(([deporte, items]) => {
           const cfg = sportConfig[deporte] ?? sportConfig["Fútbol"];
           return (
             <div key={deporte}>
-              {/* Sport header */}
               <div className="flex items-center gap-2.5 mb-3">
                 <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${cfg.gradient} flex items-center justify-center shrink-0`}>
                   <span className="text-white text-[10px] font-black">
@@ -59,11 +53,11 @@ export default function HorariosPage() {
                   </span>
                 </div>
                 <h2 className="font-bold text-[#0D1117]">{deporte}</h2>
-                <span className="text-xs text-[#566070]">{horarios.length} actividades</span>
+                <span className="text-xs text-[#566070]">{items.length} actividades</span>
               </div>
 
               <div className="space-y-2">
-                {horarios.map(h => (
+                {items.map((h: any) => (
                   <Card key={h.id} className="hover:shadow-[0_4px_12px_0_rgb(0_0_0/0.06)] transition-shadow overflow-hidden">
                     <CardContent className="p-0">
                       <div className="flex gap-0">
